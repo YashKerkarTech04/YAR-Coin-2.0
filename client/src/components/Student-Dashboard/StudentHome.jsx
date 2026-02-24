@@ -37,11 +37,11 @@ export default function StudentHome() {
     }
   }, [location]);
 
-  const handleLogout = () => {
-    localStorage.removeItem("username");
-    alert("You have been logged out!");
-    window.location.href = "/";
-  };
+  // const handleLogout = () => {
+  //   localStorage.removeItem("username");
+  //   alert("You have been logged out!");
+  //   window.location.href = "/";
+  // };
 
   const handleEnterPlayground = () => {
     navigate("/student/playground");

@@ -272,7 +272,10 @@ const TeacherHome = () => {
   if (loading) {
     return (
       <>
-        <TeacherNavbar onLogout={handleLogout} />
+        <TeacherNavbar 
+          currentTeacher={currentTeacher} 
+          onLogout={handleLogout} 
+        />
         <div className="loading-container">
           <div className="loading-spinner">
             <h3>Loading YARCoin Bidding System...</h3>
@@ -285,16 +288,19 @@ const TeacherHome = () => {
 
   return (
     <>
-      <TeacherNavbar onLogout={handleLogout} />
+      <TeacherNavbar 
+        currentTeacher={currentTeacher} 
+        onLogout={handleLogout} 
+      />
       <div className="bidding-system">
-        <header className="bidding-header">
+        {/* <header className="bidding-header">
           <h1>YARCoin Bidding System</h1>
           <p>Welcome, {currentTeacher?.name || 'Teacher'}</p>
           <p className="teacher-email">{currentTeacher?.email}</p>
           <p className="teacher-balance">
             Your YARCoin Balance: <strong>{currentTeacher?.purse || 10000} YARCoins</strong>
           </p>
-        </header>
+        </header> */}
 
         <div className="bidding-container">
           {/* Students Section */}
