@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import './Playground.css';
 import Navbar from "../Navbar/Navbar";
 
 const Playground = () => {
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
   const location = useLocation();
   const [students, setStudents] = useState([]);
   const [teachers, setTeachers] = useState([]);
@@ -204,16 +204,15 @@ const Playground = () => {
 
   return (
     <>
-      <Navbar onLogout={handleLogout} />
+      <Navbar 
+        onLogout={handleLogout}
+        currentStudent={currentStudent}
+        currentStudentBids={currentStudentBids}
+        getTeacherNameById={getTeacherNameById}
+      />
       <div className="playground">
         <header className="playground-header">
-          <h1>Member Marketplace</h1>
-          <p>Welcome, <strong>{currentStudent?.name || 'Student'}</strong>! </p>
-          <p className="student-status">
-            View all members, their skills, achievements, and current bidding activity
-          </p>
         </header>
-
         <div className="playground-tabs">
           <button 
             className={`tab-button ${activeTab === 'all' ? 'active' : ''}`}
@@ -313,56 +312,7 @@ const Playground = () => {
           </section>
         </div>
 
-        {/* Current Student Status Card */}
-        {currentStudent && activeTab !== 'acquired' && (
-          <div className="current-student-card">
-            <h3>Your Profile</h3>
-            <div className="profile-details">
-              <div className="profile-item">
-                <span className="label">Name:</span>
-                <span className="value">{currentStudent.name}</span>
-              </div>
-              <div className="profile-item">
-                <span className="label">Email:</span>
-                <span className="value">{currentStudent.email}</span>
-              </div>
-              <div className="profile-item">
-                <span className="label">Base Price:</span>
-                <span className="value">{currentStudent.basePrice} YARC</span>
-              </div>
-              
-              {/* Collapsible Dropdown for Biddings */}
-              <div className="profile-item">
-                <span className="label">Current Biddings:</span>
-                {currentStudentBids.length > 0 ? (
-                  <details className="biddings-dropdown">
-                    <summary>View {currentStudentBids.length} Bid{currentStudentBids.length !== 1 && "s"}</summary>
-                    <div className="biddings-list">
-                      {currentStudentBids.map((bid, index) => (
-                        <div key={bid._id || index} className="bidding-item">
-                          <span className="teacher-name">{bid.teacherName}</span>
-                          <span className="bid-amount">{bid.bidAmount} YARC</span>
-                        </div>
-                      ))}
-                    </div>
-                  </details>
-                ) : (
-                  <span className="value">No active bids</span>
-                )}
-              </div>
-
-              <div className="profile-item">
-                <span className="label">Status:</span>
-                <span className={`status ${currentStudent.ownedBy ? 'acquired' : 'available'}`}>
-                  {currentStudent.ownedBy ? 
-                    `Acquired by ${getTeacherNameById(currentStudent.ownedBy)}` 
-                    : 'Available for Bidding'
-                  }
-                </span>
-              </div>
-            </div>
-          </div>
-        )}
+       
       </div>
     </>
   );
