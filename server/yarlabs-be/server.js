@@ -14,8 +14,9 @@ const biddingRoutes = require('./routes/biddingRoutes');
 const Bidding = require('./models/Bidding')
 const DEX = require('./models/DEX');
 const Message = require('./models/Message');
-const dashboardRoutes = require('./routes/dashboard');
+const statRoutes = require('./routes/statRoutes');
 const paneltyRoutes = require('./routes/paneltyRoutes');
+const nftRoutes = require('./routes/nftRoutes');
 
 const app = express();
 const server = http.createServer(app);
@@ -55,8 +56,9 @@ app.use(express.json());
 app.use('/api/students', studentRoutes);
 app.use('/api/teachers', teacherRoutes);
 app.use('/api/biddings', biddingRoutes);
-app.use('/dashboard', dashboardRoutes);
+app.use('/stat', statRoutes);
 app.use('/panelty', paneltyRoutes);
+app.use('/mint', nftRoutes);
 
 mongoose.connect(process.env.MONGO_URI)
     .then(() => console.log('MongoDB connected!'))
