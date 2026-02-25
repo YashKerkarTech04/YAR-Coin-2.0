@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import "./StudentChatInterface.css";
 import socket from "./socket";
+import { useNavigate } from "react-router-dom";
 
 function StudentChatInterface() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
@@ -8,6 +9,7 @@ function StudentChatInterface() {
   const [input, setInput] = useState("");
   const [teamMembers, setTeamMembers] = useState([]);
   const [user, setUser] = useState(null);
+  const navigate = useNavigate();
 
   // Dummy team data
   const dummyTeam = {
@@ -108,15 +110,24 @@ function StudentChatInterface() {
 
       {/* Sidebar */}
       <div className={`sidebar ${isSidebarOpen ? "open" : "closed"}`}>
-        <div className="sidebar-header">
-          <h3>Team Members</h3>
+       <div className="sidebar-header">
+        <div className="sidebar-left">
           <button
-            className="close-btn"
-            onClick={() => setIsSidebarOpen(false)}
+            className="back-btn"
+            onClick={() => navigate(-1)}
           >
-            ✖
+            ←
           </button>
+          <h3>Team Members</h3>
         </div>
+
+        <button
+          className="close-btn"
+          onClick={() => setIsSidebarOpen(false)}
+        >
+          ✖
+        </button>
+      </div> 
 
         {teamMembers.map((member, index) => (
           <div key={index} className="member">

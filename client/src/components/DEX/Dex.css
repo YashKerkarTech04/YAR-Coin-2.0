@@ -1,0 +1,186 @@
+.dex-page {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: linear-gradient(135deg, #1f2937, #111827);
+  padding: 2rem;
+}
+
+.dex-card {
+  background: #1f2937;
+  padding: 2rem;
+  width: 350px;
+  border-radius: 20px;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+  color: white;
+  border: 1px solid rgba(255,255,255,0.05);
+}
+
+.dex-card h2 {
+  text-align: center;
+  margin-bottom: 1.5rem;
+  font-weight: 600;
+}
+
+.dex-form {
+  display: flex;
+  flex-direction: column;
+}
+
+.dex-form label {
+  margin-bottom: 0.4rem;
+  font-size: 0.9rem;
+  color: #9ca3af;
+}
+
+.dex-form input {
+  padding: 0.7rem;
+  border-radius: 10px;
+  border: none;
+  margin-bottom: 1.2rem;
+  font-size: 1rem;
+  outline: none;
+}
+
+.dex-form input:focus {
+  box-shadow: 0 0 0 2px #6366f1;
+}
+
+.usd-display {
+  background: #111827;
+  padding: 1rem;
+  border-radius: 12px;
+  text-align: center;
+  margin-bottom: 1.2rem;
+  border: 1px solid rgba(255,255,255,0.05);
+}
+
+.usd-display p {
+  font-size: 0.8rem;
+  color: #9ca3af;
+}
+
+.usd-display h3 {
+  margin-top: 0.3rem;
+  font-size: 1.4rem;
+  color: #10b981;
+}
+
+.convert-btn {
+  padding: 0.8rem;
+  border-radius: 12px;
+  border: none;
+  background: linear-gradient(135deg, #6366f1, #4f46e5);
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.3s ease;
+}
+
+.convert-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 20px rgba(99,102,241,0.3);
+}
+
+/* Display Row for Side by Side Boxes */
+.display-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1.2rem;
+}
+
+.usd-display {
+  flex: 1;
+  background: #111827;
+  padding: 1rem;
+  border-radius: 12px;
+  text-align: center;
+  border: 1px solid rgba(255,255,255,0.05);
+}
+
+/* Transaction History Button */
+.history-btn {
+  margin-top: 1rem;
+  padding: 0.7rem;
+  border-radius: 12px;
+  border: none;
+  background: linear-gradient(135deg, #10b981, #059669);
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.3s ease;
+}
+
+.history-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 20px rgba(16,185,129,0.3);
+}
+
+/* Side History Panel */
+.history-panel {
+  width: 320px;
+  height: 500px;
+  margin-left: 2rem;
+  background: #1f2937;
+  border-radius: 20px;
+  padding: 1.5rem;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+  border: 1px solid rgba(255,255,255,0.05);
+  animation: slideIn 0.3s ease forwards;
+  display: flex;
+  flex-direction: column;
+}
+
+.history-panel h3 {
+  margin-bottom: 1rem;
+  text-align: center;
+}
+
+.history-content {
+  flex: 1;
+  background: #111827;
+  border-radius: 12px;
+  padding: 1rem;
+  overflow-y: auto; /* 🔥 Scrollable */
+}
+
+/* Slide animation */
+@keyframes slideIn {
+  from {
+    transform: translateX(50px);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+
+/* Transaction Card */
+.transaction-card {
+  background: #1f2937;
+  padding: 0.8rem;
+  border-radius: 10px;
+  margin-bottom: 0.8rem;
+  border: 1px solid rgba(255,255,255,0.05);
+}
+
+.transaction-card p {
+  font-size: 0.8rem;
+  margin: 2px 0;
+}
+
+.tx-date {
+  font-size: 0.7rem;
+  color: #9ca3af;
+  margin-top: 4px;
+}
+
+.no-transactions {
+  text-align: center;
+  color: #9ca3af;
+  font-size: 0.9rem;
+}

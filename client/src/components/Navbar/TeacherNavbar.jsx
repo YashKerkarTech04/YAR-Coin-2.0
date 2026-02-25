@@ -100,6 +100,13 @@ export default function TeacherNavbar({
                     </Link>
                 </button>
 
+                <button className="penalty-btn">
+                    <Link to="/">
+                      Penalty
+                    </Link>
+                </button>
+
+
                 <button 
                   className="dropdown-logout-btn" 
                   onClick={handleLogout}
