@@ -15,7 +15,8 @@ const DEXSchema = new mongoose.Schema({
         type: Number,
         required: true,
         min: 0
-    }
+    },
+    totalUsd: { type: Number, default: 0 }
 }, { timestamps: true });
 
 module.exports = mongoose.model('DEX', DEXSchema);
