@@ -132,6 +132,12 @@ export default function Navbar({
                       Team Workspace
                    </Link>
                 </button>
+
+                <button className="dex-btn">
+                    <Link to="/dexes">
+                      DEX
+                    </Link>
+                </button>
               
 
                 <button 

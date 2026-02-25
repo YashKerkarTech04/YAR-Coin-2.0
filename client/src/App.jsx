@@ -5,6 +5,7 @@ import StudentHome from "./components/Student-Dashboard/StudentHome";
 import Playground from "./components/Student-Dashboard/Playground";
 import StudentChatInterface from "./components/Chat-Interface/StudentChatInterface";
 import TeacherChatInterface from "./components/Chat-Interface/TeacherChatInterface";
+import Dex from "./components/DEX/Dex";
 
 function App() {
   return (
@@ -16,6 +17,7 @@ function App() {
         <Route path="/student/playground" element={<Playground/>} />
         <Route path="/student-workspace" element={<StudentChatInterface />} />
         <Route path="/teacher-workspace" element={<TeacherChatInterface />} />
+        <Route path="/dexes" element={<Dex />} />
       </Routes>
     </Router>
   );
