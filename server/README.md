@@ -20,7 +20,8 @@ wss://yarcoin.vercel.app
 POST   https://yarcoin.vercel.app/api/teachers
 GET    https://yarcoin.vercel.app/api/teachers
 GET    https://yarcoin.vercel.app/stat/repo/:owner/:repo
-GET    https://yarcoin.vercel.app/panelty/:walletAddress/:amount
+POST   https://yarcoin.vercel.app/apply/panelty
+GET    https://yarcoin.vercel.app/apply/panelty/:walletAddress
 POST   https://yarcoin.vercel.app/mint/nft
 ```
 
