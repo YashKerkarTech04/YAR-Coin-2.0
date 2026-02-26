@@ -32,7 +32,7 @@ app.use('/api/students', studentRoutes);
 app.use('/api/teachers', teacherRoutes);
 app.use('/api/biddings', biddingRoutes);
 app.use('/stat', statRoutes);
-app.use('/panelty', paneltyRoutes);
+app.use('/apply', paneltyRoutes);
 app.use('/mint', nftRoutes);
 app.use('/', DEXRoutes);
 
