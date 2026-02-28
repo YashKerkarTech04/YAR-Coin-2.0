@@ -12,7 +12,6 @@ router.get("/repo/:owner/:repo", async (req, res) => {
     res.json(contributors);
 
   } catch (error) {
-    console.log(error);
     res.status(500).json({ message: "Error fetching contributors" });
   }
 });
