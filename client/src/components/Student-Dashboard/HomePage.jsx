@@ -26,21 +26,30 @@ import HomeNavbar from "../Navbar/HomeNavbar";
 
 export default function HomePage() {
   const [loggedInUser, setLoggedInUser] = useState("");
+  const [userRole, setUserRole] = useState(""); // Added state for user role
   const navigate = useNavigate();
   const location = useLocation();
 
   useEffect(() => {
     // Get user info from localStorage if logged in
     const userName = localStorage.getItem("userName") || localStorage.getItem("username") || "";
+    const role = localStorage.getItem("userRole") || ""; // Get user role
     setLoggedInUser(userName);
+    setUserRole(role); // Set user role in state
   }, [location]);
 
   const handleEnterPlayground = () => {
     // Check if user is logged in before allowing entry to playground
     const isLoggedIn = localStorage.getItem("userEmail") || localStorage.getItem("username");
+    const role = localStorage.getItem("userRole"); // Get the user's role from localStorage
     
     if (isLoggedIn) {
-      navigate("/student/playground");
+      if (role === "teacher") {
+        navigate("/teacher-home");
+      } else {
+        // Default to student playground (assuming student role)
+        navigate("/student/playground");
+      }
     } else {
       // Redirect to auth page if not logged in
       navigate("/auth", { state: { from: "home", message: "Please login to access the Playground" } });
@@ -66,6 +75,7 @@ export default function HomePage() {
               <div className="welcome-badge">
                 <FaRocketIcon className="badge-icon" />
                 <span>Welcome{loggedInUser ? `, ${loggedInUser}` : " to YARCoin"}!</span>
+                {userRole && <span className="role-badge"> ({userRole})</span>}
               </div>
 
               <h1 className="hero-title">
