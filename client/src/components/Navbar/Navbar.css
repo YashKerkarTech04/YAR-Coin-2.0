@@ -4,6 +4,10 @@ body {
   font-family: "Helvetica Neue", Arial, sans-serif;
 }
 
+div.bid-item{
+  color:black;
+}
+
 .navbar {
   height: 70px;
   width: 100%;

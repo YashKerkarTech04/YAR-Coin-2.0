@@ -116,11 +116,6 @@ export default function HomeHeader() {
             </button>
           ) : (
             <div className="profile-section">
-              <div className="yarc-balance">
-                <FaCoins className="yarc-icon" />
-                <span>1,250 YARC</span>
-              </div>
-              
               <div className="profile-dropdown-container">
                 <button 
                   className="profile-btn" 
@@ -213,11 +208,6 @@ export default function HomeHeader() {
                       <p className="mobile-user-name">{userData?.name}</p>
                       <p className="mobile-user-email">{userData?.email}</p>
                     </div>
-                  </div>
-                  
-                  <div className="mobile-yarc-balance">
-                    <FaCoins className="yarc-icon" />
-                    <span>1,250 YARC</span>
                   </div>
                   
                   <button 

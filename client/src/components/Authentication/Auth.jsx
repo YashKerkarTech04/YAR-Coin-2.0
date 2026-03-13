@@ -178,7 +178,7 @@ const handleLogin = async (e) => {
           } 
         });
       } else {
-        navigate("/student-home", { 
+        navigate("/student/playground", { 
           state: { 
             ...user,
             role: 'student'

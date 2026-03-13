@@ -441,7 +441,7 @@ export default function HomePage() {
               <h3>YARCoin</h3>
               <p>Revolutionizing talent recognition through blockchain-powered bidding.</p>
               <div className="social-links">
-                <a href="#" target="_blank" rel="noopener noreferrer">
+                <a href="https://github.com/YashKerkarTech04/YAR-Coin-2.0" target="_blank" rel="noopener noreferrer">
                   <FaGithub />
                 </a>
                 <a href="#" target="_blank" rel="noopener noreferrer">
