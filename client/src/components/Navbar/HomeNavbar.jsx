@@ -62,7 +62,7 @@ export default function HomeHeader() {
     if (userData?.role === "teacher") {
       navigate("/teacher-home");
     } else {
-      navigate("/student-home");
+      navigate("/student/playground");
     }
     setProfileDropdownOpen(false);
     setMobileMenuOpen(false);

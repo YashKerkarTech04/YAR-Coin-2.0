@@ -7,7 +7,7 @@ export default function Auth() {
   //useState variables
   const [tab, setTab] = useState("register");  // "register" or "login"
   const [role, setRole] = useState("student");  // "student" or "teacher"
-  const [isLoading, setIsLoading] = useState(false); //Disables form buttons during API calls.
+  const [isLoading, setIsLoading] = useState(false); //Disables form buttons during API calls (Register & Login button will get disabled)
   const [message, setMessage] = useState({ text: "", type: "" }); //to show success or error message
   const navigate = useNavigate();
 
@@ -45,16 +45,15 @@ export default function Auth() {
     if (message.text) setMessage({ text: "", type: "" });
   };
 
-  //showing temporary success/error messages
   const showMessage = (text, type) => {
     setMessage({ text, type });
-    setTimeout(() => setMessage({ text: "", type: "" }), 5000);
+    setTimeout(() => setMessage({ text: "", type: "" }), 5000); //Display success or error message for 5 seconds
   };
 
   // Submit register form
   const handleRegister = async (e) => {
     e.preventDefault();  //after submitting the form, it prevents the page from getting reload.
-    setIsLoading(true); //button for register gets disable, because data is going
+    setIsLoading(true); //button for register gets disable, because data is going in database
 
     try {
       const baseUrl = import.meta.env.VITE_BASE_URL;
@@ -76,13 +75,14 @@ export default function Auth() {
         // walletAddress auto-assigned by backend
       };
 
+      //This sends data to backend
       const res = await fetch(url, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
       });
 
-      const data = await res.json();
+      const data = await res.json(); //Backend sends response.
 
       if(!res.ok){
         showMessage("Error: " + (data.error || "Registration failed"), "error");
@@ -92,7 +92,7 @@ export default function Auth() {
       // SHOW WALLET ADDRESS FOR BOTH ROLES (auto-assigned)
       if (data.walletAddress) {
         showMessage(`${role.charAt(0).toUpperCase() + role.slice(1)} registered successfully! Your auto-assigned wallet: ${data.walletAddress} - COPY THIS FOR LOGIN`, "success");
-        // Auto-fill login for convenience
+        // Auto-filling the login details
         setLoginData({
           email: role === "student" ? studentFormData.email : teacherFormData.email,
           walletAddress: data.walletAddress
@@ -100,8 +100,6 @@ export default function Auth() {
       } else {
         showMessage("Registered successfully! Please check your wallet address.", "success");
       }
-
-      setTab("login");
       
       // Clear forms
       setStudentFormData({
@@ -125,7 +123,7 @@ export default function Auth() {
     }
   };
 
-// Submit login form - UPDATED VERSION
+// Submit login form 
 const handleLogin = async (e) => {
   e.preventDefault();
   setIsLoading(true);
@@ -161,6 +159,9 @@ const handleLogin = async (e) => {
     localStorage.setItem("userName", user.name);
     localStorage.setItem("userRole", userRole);
     localStorage.setItem("userId", user._id);
+
+    const name = localStorage.getItem("userName");
+    console.log("Name of the user:",name);
     if (user.walletAddress) {
       localStorage.setItem("walletAddress", user.walletAddress);
     }
@@ -272,9 +273,14 @@ const handleLogin = async (e) => {
               <span onClick={() => !isLoading && setTab("register")}>Sign up</span>
             </p>
 
-            <button type="submit" disabled={isLoading}>
+            <button type="submit" disabled={isLoading} className="login-btn">
               {isLoading ? "Signing In..." : "Login to YARCoin"}
             </button>
+
+             <button className="metamask-btn">
+              {"Connect to Wallet"}
+            </button>
+
           </form>
         )}
 
@@ -369,7 +375,7 @@ const handleLogin = async (e) => {
               <span onClick={() => !isLoading && setTab("login")}>Login</span>
             </p>
 
-            <button type="submit" disabled={isLoading}>
+            <button type="submit" disabled={isLoading} className="register-btn">
               {isLoading ? "Creating Account..." : `Register`}
             </button>
           </form>
