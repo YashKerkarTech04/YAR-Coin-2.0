@@ -63,6 +63,17 @@ export default function HomePage() {
     }
   };
 
+  const copyContractAddress = () => {
+    const address = document.getElementById("contractAddress").innerText;
+    const btn = document.getElementById("copyBtn");
+    navigator.clipboard.writeText(address);
+    btn.innerText = "Copied"
+
+    setTimeout(()=>{
+      btn.innerText = "Copy";
+    },2000);
+  };
+
   return (
     <div className="home-page">
       <HomeNavbar /> {/* Use the imported component here */}
@@ -77,6 +88,21 @@ export default function HomePage() {
                 <span>Welcome{loggedInUser ? `, ${loggedInUser}` : " to YARCoin"}!</span>
                 {userRole && <span className="role-badge"> ({userRole})</span>}
               </div>
+
+              <div className="contract-box">
+                <div className="contract-title">
+                  YARCoin Token Contract (Sepolia Testnet)
+                </div>
+
+                <div className="contract-address-row">
+                  <span id="contractAddress">
+                    0x2177502Dc5b19c256Aaa72c97bC24bbD5128eF51
+                  </span>
+
+                  <button id="copyBtn" className="copy-btn" onClick={copyContractAddress}>Copy</button>
+                </div>
+              </div>
+
 
               <h1 className="hero-title">
                 Discover Your <span className="gradient-text">Potential</span> in the 
@@ -105,6 +131,8 @@ export default function HomePage() {
                   Learn More
                 </button>
               </div>
+
+              
 
               <div className="hero-stats">
                 <div className="stat-item">

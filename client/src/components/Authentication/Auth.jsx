@@ -141,6 +141,7 @@ export default function Auth() {
   }
 };
 
+
 // Submit login form 
 const handleLogin = async (e) => {
   e.preventDefault();
@@ -178,8 +179,6 @@ const handleLogin = async (e) => {
     localStorage.setItem("userRole", userRole);
     localStorage.setItem("userId", user._id);
 
-    const name = localStorage.getItem("userName");
-    console.log("Name of the user:",name);
     if (user.walletAddress) {
       localStorage.setItem("walletAddress", user.walletAddress);
     }
@@ -210,6 +209,22 @@ const handleLogin = async (e) => {
     showMessage("Failed to connect to backend", "error");
   } finally {
     setIsLoading(false);
+  }
+};
+
+const handleLoginWalletConnect = async (e) => {
+  e.preventDefault();
+
+  const address = await connectWallet();
+
+  if (address) {
+    setLoginData({
+      ...loginData,
+      walletAddress: address
+    });
+
+    console.log("Login Wallet Address:", address);
+    showMessage("Wallet connected: " + address, "success");
   }
 };
 
@@ -260,18 +275,6 @@ const handleLogin = async (e) => {
 
         {tab === "login" && (
           <form className="auth-form" onSubmit={handleLogin}>
-            <div className="input-group">
-              <label>Email</label>
-              <input
-                type="email"
-                name="email"
-                placeholder="Enter your email"
-                value={loginData.email}
-                onChange={handleLoginChange}
-                required
-                disabled={isLoading}
-              />
-            </div>
 
             <div className="input-group">
               <label>Wallet Address</label>
@@ -293,6 +296,13 @@ const handleLogin = async (e) => {
 
             <button type="submit" disabled={isLoading} className="login-btn">
               {isLoading ? "Signing In..." : "Login to YARCoin"}
+            </button>
+
+            <button
+              type="button"
+              className="metamask-btn"
+              onClick={handleLoginWalletConnect}>
+              Connect with Wallet
             </button>
 
 
@@ -390,15 +400,16 @@ const handleLogin = async (e) => {
               <span onClick={() => !isLoading && setTab("login")}>Login</span>
             </p>
 
-            <button type="submit" disabled={isLoading} className="register-btn">
+             <button type="button"
+              className="metamask-btn"
+              onClick={handleConnectWallet}>
+              Connect to Wallet
+            </button>
+
+            <button type="submit" disabled={isLoading || !walletAddress} className="register-btn">
               {isLoading ? "Creating Account..." : `Register`}
             </button>
 
-            <button type="button"
-              className="metamask-btn"
-              onClick={handleConnectWallet}>
-              {"Connect to Wallet"}
-            </button>
           </form>
         )}
       </div>

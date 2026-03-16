@@ -902,6 +902,55 @@
   transform: translateX(5px);
 }
 
+.contract-box{
+  padding:14px 18px;
+  width:65%;
+  display: inline-block;
+  border-radius: 10px;
+  background: rgba(255,255,255,0.08);
+  backdrop-filter: blur(6px);
+  border:1px solid rgba(255,255,255,0.15); 
+}
+
+.contract-title{
+  font-size:14px;
+  color: white;
+  margin-bottom: 6px;
+  font-weight:500;
+}
+
+.contract-address-row{
+  display:flex;
+  align-items: center;
+  gap:10px;
+}
+
+#contractAddress {
+  font-family: monospace;
+  font-size: 15px;
+  color: #ffffff;
+  background: rgba(0,0,0,0.25);
+  padding: 6px 10px;
+  border-radius: 6px;
+}
+
+.copy-btn {
+  background: linear-gradient(135deg, #6a7cff, #9a6bff);
+  border: none;
+  padding: 6px 14px;
+  color: white;
+  font-size: 13px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.copy-btn:hover {
+  transform: scale(1.05);
+}
+
+
+
 /* Footer */
 .home-footer {
   background: rgba(0, 0, 0, 0.3);
