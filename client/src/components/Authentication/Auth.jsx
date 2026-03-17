@@ -78,8 +78,13 @@ export default function Auth() {
 
   try {
     // 🔥 STEP 1: Blockchain Approval (ONLY FOR TEACHER)
-    if (role === "teacher") {
-      showMessage("Setting up your wallet...", "success");
+      if (role === "teacher") {
+        showMessage("Setting up your wallet for token distributon...", "success");
+      }
+      else{
+        showMessage("Setting up your wallet for penalties & transactions...", "success");
+      }
+
 
       const approved = await approveYAR();
 
@@ -88,7 +93,6 @@ export default function Auth() {
         setIsLoading(false);
         return;
       }
-    }
 
     // 🔥 STEP 2: Backend Registration
     const baseUrl = import.meta.env.VITE_BASE_URL;

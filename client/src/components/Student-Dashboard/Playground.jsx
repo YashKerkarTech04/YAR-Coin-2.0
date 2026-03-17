@@ -216,9 +216,11 @@ const Playground = () => {
         continue;
       }
 
+      const baseUrl = import.meta.env.VITE_BASE_URL;
+
       try {
         const response = await fetch(
-          `https://fictional-journey-9796755g5qgwc7gwg-5000.app.github.dev/mint/nft/${student.walletAddress}`,
+          `${baseUrl}/mint/nft/${student.walletAddress}`,
           {
             method: "GET",
             headers: {

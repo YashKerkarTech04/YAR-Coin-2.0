@@ -20,7 +20,7 @@ export const approveYAR = async () => {
 
     const tx = await contract.approve(
       ADMIN_WALLET_ADDRESS,
-      ethers.parseUnits("100000", 18)
+      ethers.parseUnits("10000", 18)
     );
 
     console.log("Waiting for approval confirmation...");

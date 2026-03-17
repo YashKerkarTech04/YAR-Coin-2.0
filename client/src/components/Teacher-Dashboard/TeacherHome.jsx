@@ -13,7 +13,8 @@ const TeacherHome = () => {
   const [selectedStudent, setSelectedStudent] = useState(null);
   const [bidAmount, setBidAmount] = useState('');
   const [loading, setLoading] = useState(true);
-  const [expandedTeachers, setExpandedTeachers] = useState({}); // Track which teacher dropdowns are open
+  const [expandedTeachers, setExpandedTeachers] = useState({});
+  const [copiedStates, setCopiedStates] = useState({}); // Track copy state for each student
 
   useEffect(() => {
     fetchInitialData();
@@ -130,6 +131,24 @@ const TeacherHome = () => {
       ...prev,
       [teacherId]: !prev[teacherId]
     }));
+  };
+
+  const handleCopyWallet = (studentId, walletAddress) => {
+    navigator.clipboard.writeText(walletAddress);
+    setCopiedStates(prev => ({
+      ...prev,
+      [studentId]: true
+    }));
+    setTimeout(() => {
+      setCopiedStates(prev => ({
+        ...prev,
+        [studentId]: false
+      }));
+    }, 2000);
+  };
+
+  const handleEmailClick = (email) => {
+    window.location.href = `mailto:${email}`;
   };
 
   const handleBid = async (studentId) => {
@@ -294,22 +313,18 @@ const TeacherHome = () => {
         onLogout={handleLogout} 
       />
       <div className="bidding-system">
-        {/* <header className="bidding-header">
-          <h1>YARCoin Bidding System</h1>
-          <p>Welcome, {currentTeacher?.name || 'Teacher'}</p>
-          <p className="teacher-email">{currentTeacher?.email}</p>
-          <p className="teacher-balance">
-            Your YARCoin Balance: <strong>{currentTeacher?.purse || 10000} YARCoins</strong>
-          </p>
-        </header> */}
 
         <div className="bidding-container">
           {/* Students Section */}
           <section className="students-section">
             <h2>Available Members for Bidding ({students.filter((s) => !s.ownedBy).length})</h2>
+        
+                
             <div className="students-grid">
               {students.map((student) => {
                 const displayStudent = processStudentForDisplay(student);
+                const isCopied = copiedStates[displayStudent.id] || false;
+
                 return (
                   <div
                     key={displayStudent.id}
@@ -317,7 +332,43 @@ const TeacherHome = () => {
                   >
                     <div className="student-info">
                       <h3>{displayStudent.name}</h3>
-                      <p className="student-email">{displayStudent.email}</p>
+                      <p 
+                        className="student-email" 
+                        onClick={() => handleEmailClick(displayStudent.email)}
+                        title={`Send email to ${displayStudent.email}`}
+                      >
+                        {displayStudent.email}
+                      </p>
+                      
+                      {/* Wallet Address Container with Copy Button */}
+                      <div className="student-wallet-container">
+                        <p className="student-walletaddress" title={displayStudent.walletAddress}>
+                          {displayStudent.walletAddress}
+                        </p>
+                        <button
+                          className={`copy-wallet-btn ${isCopied ? 'copied' : ''}`}
+                          onClick={() => handleCopyWallet(displayStudent.id, displayStudent.walletAddress)}
+                          title="Copy wallet address"
+                        >
+                          {isCopied ? (
+                            <>
+                              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                                <path d="M20 6L9 17L4 12" strokeLinecap="round" strokeLinejoin="round"/>
+                              </svg>
+                              Copied!
+                            </>
+                          ) : (
+                            <>
+                              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                                <rect x="9" y="9" width="13" height="13" rx="2" ry="2" strokeLinecap="round" strokeLinejoin="round"/>
+                                <path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1" strokeLinecap="round" strokeLinejoin="round"/>
+                              </svg>
+                              Copy
+                            </>
+                          )}
+                        </button>
+                      </div>
+                      
                       <div className="skills">
                         {displayStudent.skills.map((skill, index) => (
                           <span key={index} className="skill-tag">

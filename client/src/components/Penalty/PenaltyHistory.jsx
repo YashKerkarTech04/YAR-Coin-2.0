@@ -17,9 +17,11 @@ const PenaltyHistory = () => {
         return;
       }
 
+      const baseUrl = import.meta.env.VITE_BASE_URL;
+
       try {
         const response = await fetch(
-          `https://fictional-journey-9796755g5qgwc7gwg-5000.app.github.dev/apply/panelty/${walletAddress}`
+          `${baseUrl}/apply/panelty/${walletAddress}`
         );
 
         const data = await response.json();

@@ -36,9 +36,11 @@ const Penalty = () => {
     setIsLoading(true);
     setMessage({ text: "", type: "" });
 
+    const baseUrl = import.meta.env.VITE_BASE_URL;
+
     try {
       const response = await fetch(
-        "https://fictional-journey-9796755g5qgwc7gwg-5000.app.github.dev/apply/panelty",
+        `${baseUrl}/apply/panelty`,
         {
           method: "POST",
           headers: {
@@ -47,7 +49,7 @@ const Penalty = () => {
           body: JSON.stringify({
             fromWallet: candidateWallet,   // student
             toWallet: teacherWallet,       // teacher
-            amount: Number(amount),
+            amount: amount.toString(),
             description: reason || "",
           }),
         }
@@ -56,7 +58,7 @@ const Penalty = () => {
       const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(data.error || "Penalty failed");
+        throw new Error(data.message || data.error);
       }
 
       setMessage({
