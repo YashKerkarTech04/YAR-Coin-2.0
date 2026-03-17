@@ -96,7 +96,7 @@ export default function HomePage() {
 
                 <div className="contract-address-row">
                   <span id="contractAddress">
-                    0x2177502Dc5b19c256Aaa72c97bC24bbD5128eF51
+                    0x42861CE1c5A357EdE7bd0CAe9A14B1AC95E56061
                   </span>
 
                   <button id="copyBtn" className="copy-btn" onClick={copyContractAddress}>Copy</button>

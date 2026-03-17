@@ -96,6 +96,7 @@ const TeacherHome = () => {
     id: student._id,
     name: student.name,
     email: student.email,
+    walletAddress: student.walletAddress,
     skills: student.skills || ['Skills not specified'],
     achievements: student.achievements || ['Achievements not specified'],
     currentBid: student.yarBalance || 0,
@@ -279,7 +280,7 @@ const TeacherHome = () => {
         <div className="loading-container">
           <div className="loading-spinner">
             <h3>Loading YARCoin Bidding System...</h3>
-            <p>Connecting to friend&apos;s backend server...</p>
+            {/* <p>Connecting to friend&apos;s backend server...</p> */}
           </div>
         </div>
       </>

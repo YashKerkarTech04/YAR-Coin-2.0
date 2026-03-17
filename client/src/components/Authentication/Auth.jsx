@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom"; //for redirecting
 import "./Auth.css";
+import { approveYAR } from "../../utils/approveYAR";
 import { connectWallet } from "../../utils/connectWallet.js";
 
 export default function Auth() {
@@ -52,82 +53,6 @@ export default function Auth() {
     setTimeout(() => setMessage({ text: "", type: "" }), 5000); //Display success or error message for 5 seconds
   };
 
-  // Submit register form
-  const handleRegister = async (e) => {
-    e.preventDefault();  //after submitting the form, it prevents the page from getting reload.
-    setIsLoading(true); //button for register gets disable, because data is going in database
-
-    if (!walletAddress) {
-      showMessage("Please connect your wallet first", "error");
-      setIsLoading(false);
-      return;
-    }
-
-    try {
-      const baseUrl = import.meta.env.VITE_BASE_URL;
-      const url = role === "student" 
-        ? `${baseUrl}/api/students`
-        : `${baseUrl}/api/teachers`;
-
-      const payload = role === "student" ? {
-        name: studentFormData.name,
-        email: studentFormData.email,
-        walletAddress: walletAddress,
-        skills: studentFormData.skills.split(',').map(skill => skill.trim()), //array is getting created
-        achievements: studentFormData.achievements.split(',').map(ach => ach.trim()), //array is getting created
-        basePrice: parseInt(studentFormData.basePrice)
-      } : {
-        name: teacherFormData.name,
-        email: teacherFormData.email,
-        walletAddress: walletAddress,
-        specialization: teacherFormData.specialization
-      };
-
-      //This sends data to backend
-      const res = await fetch(url, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-      });
-
-      const data = await res.json(); //Backend sends response.
-
-      if(!res.ok){
-        showMessage("Error: " + (data.error || "Registration failed"), "error");
-        return;
-      }
-
-      showMessage("Registered successfully!", "success");
-
-      setLoginData({
-        email: role === "student" ? studentFormData.email : teacherFormData.email,
-        walletAddress: walletAddress
-      });
-      
-      // Clear forms
-      setStudentFormData({
-        name: "",
-        email: "",
-        skills: "",
-        achievements: "",
-        basePrice: ""
-      });
-      setTeacherFormData({
-        name: "",
-        email: "",
-        specialization: ""
-      });
-
-      setWalletAddress("");
-
-    } catch (err) {
-      console.error("Error:", err);
-      showMessage("Failed to connect to backend", "error");
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
   const handleConnectWallet = async (e) => {
   e.preventDefault(); // prevent form submit
 
@@ -138,6 +63,95 @@ export default function Auth() {
     console.log("Wallet Address:", address);
 
     showMessage("Wallet connected: " + address, "success");
+  }
+};
+
+  const handleRegister = async (e) => {
+  e.preventDefault();
+  setIsLoading(true);
+
+  if (!walletAddress) {
+    showMessage("Please connect your wallet first", "error");
+    setIsLoading(false);
+    return;
+  }
+
+  try {
+    // 🔥 STEP 1: Blockchain Approval (ONLY FOR TEACHER)
+    if (role === "teacher") {
+      showMessage("Setting up your wallet...", "success");
+
+      const approved = await approveYAR();
+
+      if (!approved) {
+        showMessage("Wallet approval failed", "error");
+        setIsLoading(false);
+        return;
+      }
+    }
+
+    // 🔥 STEP 2: Backend Registration
+    const baseUrl = import.meta.env.VITE_BASE_URL;
+    const url = role === "student" 
+      ? `${baseUrl}/api/students`
+      : `${baseUrl}/api/teachers`;
+
+    const payload = role === "student" ? {
+      name: studentFormData.name,
+      email: studentFormData.email,
+      walletAddress: walletAddress,
+      skills: studentFormData.skills.split(',').map(s => s.trim()),
+      achievements: studentFormData.achievements.split(',').map(a => a.trim()),
+      basePrice: parseInt(studentFormData.basePrice)
+    } : {
+      name: teacherFormData.name,
+      email: teacherFormData.email,
+      walletAddress: walletAddress,
+      specialization: teacherFormData.specialization
+    };
+
+    const res = await fetch(url, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+    });
+
+    const data = await res.json();
+
+    if (!res.ok) {
+      showMessage("Error: " + (data.error || "Registration failed"), "error");
+      return;
+    }
+
+    showMessage("Registered successfully!", "success");
+
+    setLoginData({
+      email: role === "student" ? studentFormData.email : teacherFormData.email,
+      walletAddress: walletAddress
+    });
+
+    // Clear forms
+    setStudentFormData({
+      name: "",
+      email: "",
+      skills: "",
+      achievements: "",
+      basePrice: ""
+    });
+
+    setTeacherFormData({
+      name: "",
+      email: "",
+      specialization: ""
+    });
+
+    setWalletAddress("");
+
+  } catch (err) {
+    console.error("Error:", err);
+    showMessage("Failed to connect to backend", "error");
+  } finally {
+    setIsLoading(false);
   }
 };
 
@@ -407,7 +421,7 @@ const handleLoginWalletConnect = async (e) => {
             </button>
 
             <button type="submit" disabled={isLoading || !walletAddress} className="register-btn">
-              {isLoading ? "Creating Account..." : `Register`}
+              {isLoading ? "Setting up wallet..." : "Register"}
             </button>
 
           </form>
