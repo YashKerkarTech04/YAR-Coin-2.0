@@ -17,7 +17,11 @@ const TeacherHome = () => {
   const [copiedStates, setCopiedStates] = useState({}); // Track copy state for each student
 
   useEffect(() => {
-    fetchInitialData();
+    const timer = setTimeout(() => {
+      fetchInitialData();
+    }, 5000); //Show loading before fetching the data
+    
+    return () => clearTimeout(timer);
   }, []);
 
   const fetchInitialData = async () => {
@@ -289,22 +293,38 @@ const TeacherHome = () => {
     });
   };
 
-  if (loading) {
-    return (
-      <>
-        <TeacherNavbar 
-          currentTeacher={currentTeacher} 
-          onLogout={handleLogout} 
-        />
-        <div className="loading-container">
-          <div className="loading-spinner">
-            <h3>Loading YARCoin Bidding System...</h3>
-            {/* <p>Connecting to friend&apos;s backend server...</p> */}
+  
+   // TeacherHome.jsx - Updated loading section
+if (loading) {
+  return (
+    <>
+      <TeacherNavbar 
+        currentTeacher={currentTeacher} 
+        onLogout={handleLogout} 
+      />
+      <div class="pl">
+        <div class="pl__coin">
+          <div class="pl__coin-flare"></div>
+          <div class="pl__coin-flare"></div>
+          <div class="pl__coin-flare"></div>
+          <div class="pl__coin-flare"></div>
+          <div class="pl__coin-layers">
+            <div class="pl__coin-layer">
+              <div class="pl__coin-inscription"></div>
+            </div>
+            <div class="pl__coin-layer"></div>
+            <div class="pl__coin-layer"></div>
+            <div class="pl__coin-layer"></div>
+            <div class="pl__coin-layer">
+              <div class="pl__coin-inscription"></div>
+            </div>
           </div>
         </div>
-      </>
-    );
-  }
+        <div class="pl__shadow"></div>
+      </div>
+    </>
+  );
+}
 
   return (
     <>

@@ -1,3 +1,263 @@
+.pl {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin: auto;
+  /* margin-top: 200px; */
+  width: 9.1em;
+  height: 12em; /* Increased height to accommodate shadow */
+  transform: scale(2.5);
+  position: relative;
+}
+.pl__coin, .pl__coin-flare, .pl__coin-inscription, 
+.pl__coin-layers, .pl__shadow {
+  animation-duration: 2s;
+  animation-timing-function: cubic-bezier(0.37, 0, 0.63, 1);
+  animation-iteration-count: infinite;
+}
+.pl__coin {
+  animation-name: bounce;
+  position: relative;
+  transform: translateY(0.5em);
+  z-index: 1;
+}
+.pl__coin-flare, .pl__coin-inscription, .pl__coin-layer {
+  position: absolute;
+}
+.pl__coin-flare {
+  animation-name: flare1;
+  background-color: white;
+  clip-path: polygon(50% 0, 67% 33%, 100% 50%, 67% 67%, 50% 100%, 33% 67%, 0 50%, 33% 33%);
+  top: 0;
+  left: -0.5em;
+  width: 1em;
+  height: 1em;
+  transform: scale(0);
+  z-index: 1;
+}
+.pl__coin-flare:nth-child(2) {
+  animation-name: flare2;
+  top: -0.5em;
+  left: 0;
+}
+.pl__coin-flare:nth-child(3) {
+  animation-name: flare3;
+  left: 3em;
+}
+.pl__coin-flare:nth-child(4) {
+  animation-name: flare4;
+  top: -0.5em;
+  left: 3.5em;
+}
+.pl__coin-inscription {
+  animation-name: inscription-front;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) rotateZ(0deg);
+}
+
+/* TEXT (YAR) */
+.pl__coin-inscription::after {
+  content: "YARC";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) rotateZ(15deg);
+  font-size: 1em;
+  font-weight: 900;
+  font-family: "Arial Black", sans-serif;
+  color: #fff3b0;
+}
+.pl__coin-layer {
+  border-radius: 50%;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(circle at 30% 30%,
+    #fff6c9 0%,
+    #f5c542 25%,
+    #d89b1e 60%,
+    #a66d00 100%);
+  box-shadow:
+    inset 0 0 0 0.35em #ffd86b,
+    inset 0 0.2em 0.4em rgba(255,255,255,0.6),
+    inset 0 -0.3em 0.5em rgba(0,0,0,0.4),
+    0 0.2em 0.4em rgba(0,0,0,0.5);
+}
+
+.pl__coin-layer::before {
+  content: "";
+  position: absolute;
+  top: 10%;
+  left: 15%;
+  width: 70%;
+  height: 40%;
+  border-radius: 50%;
+  background: radial-gradient(circle,
+    rgba(255,255,255,0.8) 0%,
+    rgba(255,255,255,0.3) 40%,
+    transparent 70%);
+  transform: rotate(-20deg);
+  pointer-events: none;
+}
+.pl__coin-layer:first-child {
+  transform: translate3d(0, 0, 0.5em);
+}
+.pl__coin-layer:nth-child(2) {
+  transform: translate3d(0, 0, 0.49em) rotateY(180deg);
+}
+.pl__coin-layer:nth-child(3) {
+  backface-visibility: visible;
+  border-radius: 0;
+  left: 50%;
+  width: 0.98em;
+  transform: translateX(-50%) rotateY(90deg);
+}
+.pl__coin-layer:nth-child(4) {
+  transform: translate3d(0, 0, -0.49em);
+}
+.pl__coin-layer:last-child {
+  transform: translate3d(0, 0, -0.5em) rotateY(180deg);
+}
+.pl__coin-layer:nth-child(n+2):nth-last-child(n+2) {
+  background-color: hsl(var(--hue2), 90%, 40%);
+  box-shadow: none;
+}
+.pl__coin-layer:last-child .pl__coin-inscription {
+  animation-name: inscription-back;
+  transform: translate(-50%, -50%) rotateZ(-30deg);
+}
+.pl__coin-layers {
+  animation-name: roll;
+  position: relative;
+  width: 4em;
+  height: 4em;
+  transform: rotateY(-15deg) rotateZ(-30deg);
+  transform-style: preserve-3d;
+}
+
+.pl__shadow {
+  position: relative;
+  top: 5em; /* Adjust this to position shadow under the coin */
+  left: 30%;
+  transform: translateX(-50%);
+  width: 5em; /* Slightly wider than coin for better effect */
+  height: 0.8em;
+  background: radial-gradient(ellipse at center, 
+    rgba(0,0,0,0.4) 0%, 
+    rgba(0,0,0,0.2) 50%, 
+    transparent 80%);
+  border-radius: 50%;
+  animation: shadow 2s cubic-bezier(0.37, 0, 0.63, 1) infinite;
+  z-index: 0;
+}
+
+/* Animations */
+@keyframes bounce {
+  from, 50%, to {
+    animation-timing-function: cubic-bezier(0.33, 0, 0.67, 0);
+    transform: translateY(0.5em);
+  }
+  25%, 75% {
+    animation-timing-function: cubic-bezier(0.33, 1, 0.67, 1);
+    transform: translateY(5.1em);
+  }
+}
+@keyframes flare1 {
+  from, 75%, to {
+    animation-timing-function: cubic-bezier(0.33, 0, 0.67, 0);
+    transform: scale(0);
+  }
+  87.5% {
+    animation-timing-function: cubic-bezier(0.33, 1, 0.67, 1);
+    transform: scale(1);
+  }
+}
+@keyframes flare2 {
+  from, to {
+    animation-timing-function: cubic-bezier(0.33, 1, 0.67, 1);
+    transform: scale(1);
+  }
+  12.5%, 87.5% {
+    animation-timing-function: cubic-bezier(0.33, 0, 0.67, 0);
+    transform: scale(0);
+  }
+}
+@keyframes flare3 {
+  from, 25%, 50%, to {
+    animation-timing-function: cubic-bezier(0.33, 0, 0.67, 0);
+    transform: scale(0);
+  }
+  37.5% {
+    animation-timing-function: cubic-bezier(0.33, 1, 0.67, 1);
+    transform: scale(1);
+  }
+}
+@keyframes flare4 {
+  from, 37.5%, 62.5%, to {
+    animation-timing-function: cubic-bezier(0.33, 0, 0.67, 0);
+    transform: scale(0);
+  }
+  50% {
+    animation-timing-function: cubic-bezier(0.33, 1, 0.67, 1);
+    transform: scale(1);
+  }
+}
+@keyframes inscription-front {
+  from, 75% {
+    animation-timing-function: cubic-bezier(0.12, 0, 0.39, 0);
+    box-shadow: 0.1875em 0 0 hsl(var(--hue2), 90%, 40%) inset;
+  }
+  87.49% {
+    animation-timing-function: steps(1);
+    box-shadow: 0.875em -0.75em 0 hsl(var(--hue2), 90%, 40%) inset;
+  }
+  87.5% {
+    animation-timing-function: cubic-bezier(0.61, 1, 0.88, 1);
+    box-shadow: -0.875em 0.75em 0 hsl(var(--hue2), 90%, 40%) inset;
+  }
+  to {
+    box-shadow: 0.1875em 0 hsl(var(--hue2), 90%, 40%) inset;
+  }
+}
+@keyframes inscription-back {
+  from, 75% {
+    box-shadow: -1em -0.875em 0 hsl(var(--hue2), 90%, 40%) inset;
+  }
+  to {
+    box-shadow: 1.125em 1em 0 hsl(var(--hue2), 90%, 40%) inset;
+  }
+}
+@keyframes roll {
+  from, 75% {
+    transform: rotateY(-15deg) rotateZ(-30deg) rotateY(0);
+  }
+  to {
+    transform: rotateY(-15deg) rotateZ(-30deg) rotateY(-1turn);
+  }
+}
+@keyframes shadow {
+  0%, 50%, 100% {
+    opacity: 0.3;
+    transform: translateX(-50%) scale(0.6);
+    background: radial-gradient(ellipse at center, 
+      rgba(0,0,0,0.3) 0%, 
+      rgba(0,0,0,0.1) 70%, 
+      transparent 100%);
+  }
+  25%, 75% {
+    opacity: 0.7;
+    transform: translateX(-50%) scale(1.2);
+    background: radial-gradient(ellipse at center, 
+      rgba(0,0,0,0.5) 0%, 
+      rgba(0,0,0,0.3) 60%, 
+      transparent 90%);
+  }
+}
+
 .bidding-system {
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   padding: 20px;
