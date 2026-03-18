@@ -264,7 +264,7 @@ const Playground = () => {
       <div className="playground">
 
         {/* Search + Filter Bar */}
-        <div className="search-filter-bar">
+        <div className="playground-search-bar">
           <div className="search-wrapper">
             <svg className="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
               <circle cx="11" cy="11" r="8" />
@@ -272,7 +272,7 @@ const Playground = () => {
             </svg>
             <input
               type="text"
-              className="search-input"
+              className="playground-search-input"
               placeholder="Search by name, email or wallet address..."
               value={searchQuery}
               onChange={e => setSearchQuery(e.target.value)}
@@ -282,7 +282,7 @@ const Playground = () => {
             )}
           </div>
           <select
-            className="filter-dropdown"
+            className="playground-filter-dropdown"
             value={filterStatus}
             onChange={e => setFilterStatus(e.target.value)}
           >

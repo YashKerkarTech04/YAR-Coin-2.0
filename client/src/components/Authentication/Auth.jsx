@@ -1,14 +1,13 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom"; 
+import { useNavigate } from "react-router-dom";
 import "./Auth.css";
 import { approveYAR } from "../../utils/approveYAR";
 import { connectWallet } from "../../utils/connectWallet.js";
 
 export default function Auth() {
 
-  //useState variables
-  const [tab, setTab] = useState("register");  
-  const [role, setRole] = useState("student");  
+  const [tab, setTab] = useState("register");
+  const [role, setRole] = useState("student");
   const [isLoading, setIsLoading] = useState(false); //Disables form buttons during API calls (Register & Login button will get disabled)
   const [message, setMessage] = useState({ text: "", type: "" }); //to show success or error message
   const [walletAddress, setWalletAddress] = useState("");
@@ -54,33 +53,32 @@ export default function Auth() {
   };
 
   const handleConnectWallet = async (e) => {
-  e.preventDefault(); // prevent form submit
+    e.preventDefault(); // prevent form submit
 
-  const address = await connectWallet();
+    const address = await connectWallet();
+    if (address) {
+      setWalletAddress(address);
+      console.log("Wallet Address:", address);
 
-  if (address) {
-    setWalletAddress(address);
-    console.log("Wallet Address:", address);
-
-    showMessage("Wallet connected: " + address, "success");
-  }
-};
+      showMessage("Wallet connected: " + address, "success");
+    }
+  };
 
   const handleRegister = async (e) => {
-  e.preventDefault();
-  setIsLoading(true);
+    e.preventDefault();
+    setIsLoading(true);
 
-  if (!walletAddress) {
-    showMessage("Please connect your wallet first", "error");
-    setIsLoading(false);
-    return;
-  }
+    if (!walletAddress) {
+      showMessage("Please connect your wallet first", "error");
+      setIsLoading(false);
+      return;
+    }
 
-  try {
+    try {
       if (role === "teacher") {
         showMessage("Setting up your wallet for token distributon...", "success");
       }
-      else{
+      else {
         showMessage("Setting up your wallet for penalties & transactions...", "success");
       }
 
@@ -92,157 +90,157 @@ export default function Auth() {
         return;
       }
 
-    // Backend Registration
-    const baseUrl = import.meta.env.VITE_BASE_URL;
-    const url = role === "student" 
-      ? `${baseUrl}/api/students`
-      : `${baseUrl}/api/teachers`;
+      // Backend Registration
+      const baseUrl = import.meta.env.VITE_BASE_URL;
+      const url = role === "student"
+        ? `${baseUrl}/api/students`
+        : `${baseUrl}/api/teachers`;
 
-    const payload = role === "student" ? {
-      name: studentFormData.name,
-      email: studentFormData.email,
-      walletAddress: walletAddress,
-      skills: studentFormData.skills.split(',').map(s => s.trim()),
-      achievements: studentFormData.achievements.split(',').map(a => a.trim()),
-      basePrice: parseInt(studentFormData.basePrice)
-    } : {
-      name: teacherFormData.name,
-      email: teacherFormData.email,
-      walletAddress: walletAddress,
-      specialization: teacherFormData.specialization
-    };
+      const payload = role === "student" ? {
+        name: studentFormData.name,
+        email: studentFormData.email,
+        walletAddress: walletAddress,
+        skills: studentFormData.skills.split(',').map(s => s.trim()),
+        achievements: studentFormData.achievements.split(',').map(a => a.trim()),
+        basePrice: parseInt(studentFormData.basePrice)
+      } : {
+        name: teacherFormData.name,
+        email: teacherFormData.email,
+        walletAddress: walletAddress,
+        specialization: teacherFormData.specialization
+      };
 
-    const res = await fetch(url, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(payload),
-    });
+      const res = await fetch(url, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
 
-    const data = await res.json();
+      const data = await res.json();
 
-    if (!res.ok) {
-      showMessage("Error: " + (data.error || "Registration failed"), "error");
-      return;
-    }
-
-    showMessage("Registered successfully!", "success");
-
-    setLoginData({
-      email: role === "student" ? studentFormData.email : teacherFormData.email,
-      walletAddress: walletAddress
-    });
-
-    // Clear forms
-    setStudentFormData({
-      name: "",
-      email: "",
-      skills: "",
-      achievements: "",
-      basePrice: ""
-    });
-
-    setTeacherFormData({
-      name: "",
-      email: "",
-      specialization: ""
-    });
-
-    setWalletAddress("");
-
-  } catch (err) {
-    console.error("Error:", err);
-    showMessage("Failed to connect to backend", "error");
-  } finally {
-    setIsLoading(false);
-  }
-};
-
-
-// Submit login form 
-const handleLogin = async (e) => {
-  e.preventDefault();
-  setIsLoading(true);
-
-  try {
-    const baseUrl = import.meta.env.VITE_BASE_URL;
-
-    const res = await fetch(`${baseUrl}/login`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        email: loginData.email,
-        walletAddress: loginData.walletAddress
-      }),
-    });
-
-    const data = await res.json();
-    console.log("Data:", data);
-
-    if (!res.ok) {
-      showMessage("Error: " + (data.error || "Login failed"), "error");
-      return;
-    }
-
-    const user = data.user;
-    const userRole = data.role;
-
-    console.log("User:", user);
-    console.log("User role:", userRole);
-
-    // STORE USER DATA IN LOCALSTORAGE
-    localStorage.setItem("userEmail", user.email);
-    localStorage.setItem("userName", user.name);
-    localStorage.setItem("userRole", userRole);
-    localStorage.setItem("userId", user._id);
-
-    if (user.walletAddress) {
-      localStorage.setItem("walletAddress", user.walletAddress);
-    }
-
-    showMessage("Login successful! Redirecting...", "success");
-
-    // Navigate based on role with user data
-    setTimeout(() => {
-      if (userRole === 'teacher') {
-        navigate("/teacher-home", { 
-          state: { 
-            ...user,
-            role: 'teacher'
-          } 
-        });
-      } else {
-        navigate("/student/playground", { 
-          state: { 
-            ...user,
-            role: 'student'
-          } 
-        });
+      if (!res.ok) {
+        showMessage("Error: " + (data.error || "Registration failed"), "error");
+        return;
       }
-    }, 1000);
 
-  } catch (err) {
-    console.error("Error:", err);
-    showMessage("Failed to connect to backend", "error");
-  } finally {
-    setIsLoading(false);
-  }
-};
+      showMessage("Registered successfully!", "success");
 
-const handleLoginWalletConnect = async (e) => {
-  e.preventDefault();
+      setLoginData({
+        email: role === "student" ? studentFormData.email : teacherFormData.email,
+        walletAddress: walletAddress
+      });
 
-  const address = await connectWallet();
+      // Clear forms
+      setStudentFormData({
+        name: "",
+        email: "",
+        skills: "",
+        achievements: "",
+        basePrice: ""
+      });
 
-  if (address) {
-    setLoginData({
-      ...loginData,
-      walletAddress: address
-    });
+      setTeacherFormData({
+        name: "",
+        email: "",
+        specialization: ""
+      });
 
-    console.log("Login Wallet Address:", address);
-    showMessage("Wallet connected: " + address, "success");
-  }
-};
+      setWalletAddress("");
+
+    } catch (err) {
+      console.error("Error:", err);
+      showMessage("Failed to connect to backend", "error");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+
+  // Submit login form 
+  const handleLogin = async (e) => {
+    e.preventDefault();
+    setIsLoading(true);
+
+    try {
+      const baseUrl = import.meta.env.VITE_BASE_URL;
+
+      const res = await fetch(`${baseUrl}/login`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          email: loginData.email,
+          walletAddress: loginData.walletAddress
+        }),
+      });
+
+      const data = await res.json();
+      console.log("Data:", data);
+
+      if (!res.ok) {
+        showMessage("Error: " + (data.error || "Login failed"), "error");
+        return;
+      }
+
+      const user = data.user;
+      const userRole = data.role;
+
+      console.log("User:", user);
+      console.log("User role:", userRole);
+
+      // STORE USER DATA IN LOCALSTORAGE
+      localStorage.setItem("userEmail", user.email);
+      localStorage.setItem("userName", user.name);
+      localStorage.setItem("userRole", userRole);
+      localStorage.setItem("userId", user._id);
+
+      if (user.walletAddress) {
+        localStorage.setItem("walletAddress", user.walletAddress);
+      }
+
+      showMessage("Login successful! Redirecting...", "success");
+
+      // Navigate based on role with user data
+      setTimeout(() => {
+        if (userRole === 'teacher') {
+          navigate("/teacher-home", {
+            state: {
+              ...user,
+              role: 'teacher'
+            }
+          });
+        } else {
+          navigate("/student/playground", {
+            state: {
+              ...user,
+              role: 'student'
+            }
+          });
+        }
+      }, 1000);
+
+    } catch (err) {
+      console.error("Error:", err);
+      showMessage("Failed to connect to backend", "error");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleLoginWalletConnect = async (e) => {
+    e.preventDefault();
+
+    const address = await connectWallet();
+
+    if (address) {
+      setLoginData({
+        ...loginData,
+        walletAddress: address
+      });
+
+      console.log("Login Wallet Address:", address);
+      showMessage("Wallet connected: " + address, "success");
+    }
+  };
 
 
   // Get current form data based on role
@@ -416,7 +414,7 @@ const handleLoginWalletConnect = async (e) => {
               <span onClick={() => !isLoading && setTab("login")}>Login</span>
             </p>
 
-             <button type="button"
+            <button type="button"
               className="metamask-btn"
               onClick={handleConnectWallet}>
               Connect MetaMask Wallet

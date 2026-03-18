@@ -308,7 +308,7 @@ const TeacherHome = () => {
               <span className="section-badge">{getSectionBadge()}</span>
             </div>
 
-            <div className="search-filter-bar">
+            <div className="teacher-search-bar">
               <div className="search-input-wrapper">
                 <svg className="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                   <circle cx="11" cy="11" r="8" />
@@ -316,7 +316,7 @@ const TeacherHome = () => {
                 </svg>
                 <input
                   type="text"
-                  className="search-input"
+                  className="teacher-search-input"
                   placeholder={
                     activeFilter === 'admins'
                       ? 'Search by name, email or specialization...'
@@ -332,7 +332,7 @@ const TeacherHome = () => {
                 )}
               </div>
               <select
-                className="filter-dropdown"
+                className="teacher-filter-dropdown"
                 value={activeFilter}
                 onChange={(e) => handleFilterChange(e.target.value)}
               >
