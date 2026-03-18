@@ -27,7 +27,7 @@ Router.post("/panelty", async (req, res) => {
         }
         const provider = new ethers.JsonRpcProvider(process.env.SEPOLIA_RPC_URL);
         const wallet = new ethers.Wallet(process.env.ADMIN_PRIVATE_KEY, provider);
-        const contractAddress = process.env.CONTRACT_ADDRESS;
+        const contractAddress = process.env.YAR_CONTRACT_ADDRESS;
         const abi = ["function transferFrom(address from, address to, uint256 value) public returns (bool)",
                      "function allowance(address owner, address spender) view returns (uint256)",
                      "function balanceOf(address owner) view returns (uint256)"];
@@ -35,11 +35,14 @@ Router.post("/panelty", async (req, res) => {
         const student = await Student.findOne({ walletAddress: fromWallet });
         const teacher = await Teacher.findOne({ walletAddress: toWallet });
         if (!student || !teacher) {
-            return res.status(404).json({ message: "Admin and Member not found" });
+            return res.status(404).json({ message: "Admin or Member not found" });
         }
-        const paneltyAmount=parseInt(amount);
+        const paneltyAmount=parseFloat(amount);
+        if (isNaN(paneltyAmount) || paneltyAmount<=0){
+            return res.status(400).json({message: "Enter valid panelty amount!"});
+        }
         if (student.yarBalance < paneltyAmount) {
-            return res.status(400).json({ message: "No sufficient YAR's on member's balance" })
+            return res.status(400).json({ message: "No sufficient YAR's on member's balance!" })
         }
         try{
             const parseAmount = ethers.parseUnits(paneltyAmount.toString(), 18);
@@ -51,20 +54,20 @@ Router.post("/panelty", async (req, res) => {
             if (balance<parseAmount){
                 return res.status(400).json({message: "Member has insufficient YAR balance!"});
             }
-            const tx = await contract.transferFrom(student.walletAddress, teacher.walletAddress, amount);
+            const tx = await contract.transferFrom(student.walletAddress, teacher.walletAddress, parseAmount);
             await tx.wait();
             student.yarBalance -= paneltyAmount;
             teacher.purse += paneltyAmount;
             await student.save();
             await teacher.save();
-            const panelty = new Panelty({student: student._id, teacher: teacher._id, amount, description});
+            const panelty = new Panelty({student: student._id, teacher: teacher._id, amount: paneltyAmount, description});
             await panelty.save();
             return res.status(200).json({ message: "Penalty applied successfully", panelty });
         }catch(err){
-            return res.status(500).json({message: "Server Error"});
+            return res.status(500).json({message: "Blockchain transaction failed", error: err.message});
         }
     } catch (err) {
-        return res.status(500).json({ message: "Error applying penalty", error: err.message });
+        return res.status(500).json({ message: "Server Error", error: err.message });
     }
 });
 
