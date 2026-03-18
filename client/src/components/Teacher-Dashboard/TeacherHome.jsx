@@ -5,6 +5,7 @@ import './TeacherHome.css';
 import TeacherNavbar from "../Navbar/TeacherNavbar";
 
 const STUDENTS_PER_PAGE = 10;
+const TEACHERS_PER_PAGE = 10;
 
 const TeacherHome = () => {
   const navigate = useNavigate();
@@ -18,6 +19,9 @@ const TeacherHome = () => {
   const [expandedTeachers, setExpandedTeachers] = useState({});
   const [copiedStates, setCopiedStates] = useState({});
   const [currentPage, setCurrentPage] = useState(1);
+  const [teacherPage, setTeacherPage] = useState(1);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [activeFilter, setActiveFilter] = useState('all');
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -71,6 +75,7 @@ const TeacherHome = () => {
       setTeachers(teachersData);
       setCurrentTeacher(currentTeacherData);
       setCurrentPage(1);
+      setTeacherPage(1);
     } catch (error) {
       console.error('Error fetching data:', error.message);
     } finally {
@@ -190,12 +195,81 @@ const TeacherHome = () => {
     });
   };
 
-  // Pagination logic
-  const totalPages = Math.ceil(students.length / STUDENTS_PER_PAGE);
-  const paginatedStudents = students.slice(
+  const handleFilterChange = (value) => {
+    setActiveFilter(value);
+    setSearchQuery('');
+    setCurrentPage(1);
+    setTeacherPage(1);
+  };
+
+  const handleSearch = (e) => {
+    setSearchQuery(e.target.value);
+    setCurrentPage(1);
+    setTeacherPage(1);
+  };
+
+  // Filtered students based on activeFilter and searchQuery
+  const getFilteredStudents = () => {
+    let base = [];
+    if (activeFilter === 'all') {
+      base = students.filter((s) => !s.ownedBy);
+    } else if (activeFilter === 'myteam') {
+      base = students.filter((s) => s.ownedBy === currentTeacher?._id);
+    }
+    if (!searchQuery.trim()) return base;
+    const q = searchQuery.toLowerCase();
+    return base.filter(
+      (s) =>
+        s.name?.toLowerCase().includes(q) ||
+        s.email?.toLowerCase().includes(q) ||
+        s.walletAddress?.toLowerCase().includes(q)
+    );
+  };
+
+  // Filtered teachers for Admins view
+  const getFilteredTeachers = () => {
+    if (!searchQuery.trim()) return teachers;
+    const q = searchQuery.toLowerCase();
+    return teachers.filter(
+      (t) =>
+        t.name?.toLowerCase().includes(q) ||
+        t.email?.toLowerCase().includes(q) ||
+        t.specialization?.toLowerCase().includes(q)
+    );
+  };
+
+  // Student pagination
+  const filteredStudents = getFilteredStudents();
+  const totalStudentPages = Math.ceil(filteredStudents.length / STUDENTS_PER_PAGE);
+  const paginatedStudents = filteredStudents.slice(
     (currentPage - 1) * STUDENTS_PER_PAGE,
     currentPage * STUDENTS_PER_PAGE
   );
+
+  // Teacher pagination (admins view)
+  const filteredTeachers = getFilteredTeachers();
+  const totalTeacherPages = Math.ceil(filteredTeachers.length / TEACHERS_PER_PAGE);
+  const paginatedTeachers = filteredTeachers.slice(
+    (teacherPage - 1) * TEACHERS_PER_PAGE,
+    teacherPage * TEACHERS_PER_PAGE
+  );
+
+  const filterOptions = [
+    { value: 'all', label: 'All Students' },
+    { value: 'myteam', label: 'My Team' },
+    { value: 'admins', label: 'Admins' },
+  ];
+
+  const getSectionTitle = () => {
+    if (activeFilter === 'all') return 'Available Members for Bidding';
+    if (activeFilter === 'myteam') return 'My Team';
+    return 'Admins & Current Holdings';
+  };
+
+  const getSectionBadge = () => {
+    if (activeFilter === 'admins') return `${filteredTeachers.length} admins`;
+    return `${filteredStudents.length} members`;
+  };
 
   if (loading) {
     return (
@@ -231,213 +305,301 @@ const TeacherHome = () => {
       <div className="bidding-system">
         <div className="bidding-container">
 
-          {/* Students Section */}
           <section className="students-section">
+            {/* Section Header */}
             <div className="section-header">
-              <h2>Available Members for Bidding</h2>
-              <span className="section-badge">{students.filter((s) => !s.ownedBy).length} available</span>
+              <h2>{getSectionTitle()}</h2>
+              <span className="section-badge">{getSectionBadge()}</span>
             </div>
 
-            {/* Table */}
-            <div className="students-table-wrapper">
-              <table className="students-table">
-                <thead>
-                  <tr>
-                    <th>#</th>
-                    <th>Name</th>
-                    <th>Email</th>
-                    <th>Wallet Address</th>
-                    <th>Skills</th>
-                    <th>Base Price</th>
-                    <th>Earned</th>
-                    <th>Acquired By</th>
-                    <th>Action</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {paginatedStudents.map((student, index) => {
-                    const d = processStudentForDisplay(student);
-                    const isCopied = copiedStates[d.id] || false;
-                    const rowNumber = (currentPage - 1) * STUDENTS_PER_PAGE + index + 1;
-
-                    return (
-                      <tr key={d.id} className={!d.isAvailable ? 'row-acquired' : ''}>
-                        <td className="col-num">{rowNumber}</td>
-                        <td className="col-name">{d.name}</td>
-                        <td className="col-email">
-                          <span
-                            className="email-link"
-                            onClick={() => handleEmailClick(d.email)}
-                            title={`Send email to ${d.email}`}
-                          >
-                            {d.email}
-                          </span>
-                        </td>
-                        <td className="col-wallet">
-                          <div className="wallet-cell">
-                            <span className="wallet-text" title={d.walletAddress}>
-                              {d.walletAddress
-                                ? `${d.walletAddress.slice(0, 8)}...${d.walletAddress.slice(-6)}`
-                                : '—'}
-                            </span>
-                            {d.walletAddress && (
-                              <button
-                                className={`copy-btn ${isCopied ? 'copied' : ''}`}
-                                onClick={() => handleCopyWallet(d.id, d.walletAddress)}
-                                title="Copy wallet address"
-                              >
-                                {isCopied ? (
-                                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                                    <path d="M20 6L9 17L4 12" strokeLinecap="round" strokeLinejoin="round" />
-                                  </svg>
-                                ) : (
-                                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                                    <rect x="9" y="9" width="13" height="13" rx="2" ry="2" />
-                                    <path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1" />
-                                  </svg>
-                                )}
-                              </button>
-                            )}
-                          </div>
-                        </td>
-                        <td className="col-skills">
-                          <div className="skills-cell">
-                            {d.skills.slice(0, 2).map((skill, i) => (
-                              <span key={i} className="skill-tag">{skill}</span>
-                            ))}
-                            {d.skills.length > 2 && (
-                              <span className="skill-more">+{d.skills.length - 2}</span>
-                            )}
-                          </div>
-                        </td>
-                        <td className="col-price">{d.basePrice} YARC</td>
-                        <td className="col-earned">{d.currentBid} YARC</td>
-                        <td className="col-status">
-                          {student.ownedBy ? (
-                            <span className="status-badge acquired">
-                              {getTeacherNameById(student.ownedBy)}
-                            </span>
-                          ) : (
-                            <span className="status-badge available">Available</span>
-                          )}
-                        </td>
-                        <td className="col-action">
-                          {d.isAvailable ? (
-                            <button
-                              className="bid-button"
-                              onClick={() => setSelectedStudent(d)}
-                            >
-                              Place Bid
-                            </button>
-                          ) : (
-                            <button className="bid-button acquired" disabled>
-                              Acquired
-                            </button>
-                          )}
-                        </td>
-                      </tr>
-                    );
-                  })}
-                </tbody>
-              </table>
-            </div>
-
-            {/* Pagination */}
-            {totalPages > 1 && (
-              <div className="pagination">
-                <button
-                  className="page-btn"
-                  onClick={() => setCurrentPage((p) => Math.max(p - 1, 1))}
-                  disabled={currentPage === 1}
-                >
-                  &#8592; Prev
-                </button>
-                <div className="page-numbers">
-                  {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
-                    <button
-                      key={page}
-                      className={`page-num ${currentPage === page ? 'active' : ''}`}
-                      onClick={() => setCurrentPage(page)}
-                    >
-                      {page}
-                    </button>
-                  ))}
-                </div>
-                <button
-                  className="page-btn"
-                  onClick={() => setCurrentPage((p) => Math.min(p + 1, totalPages))}
-                  disabled={currentPage === totalPages}
-                >
-                  Next &#8594;
-                </button>
+            {/* Search + Filter Bar */}
+            <div className="search-filter-bar">
+              <div className="search-input-wrapper">
+                <svg className="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <circle cx="11" cy="11" r="8" />
+                  <path d="M21 21l-4.35-4.35" strokeLinecap="round" />
+                </svg>
+                <input
+                  type="text"
+                  className="search-input"
+                  placeholder={
+                    activeFilter === 'admins'
+                      ? 'Search by name, email or specialization...'
+                      : 'Search by name, email or wallet address...'
+                  }
+                  value={searchQuery}
+                  onChange={handleSearch}
+                />
+                {searchQuery && (
+                  <button className="search-clear" onClick={() => { setSearchQuery(''); setCurrentPage(1); setTeacherPage(1); }} title="Clear search">
+                    &times;
+                  </button>
+                )}
               </div>
-            )}
-            <p className="pagination-info">
-              Showing {(currentPage - 1) * STUDENTS_PER_PAGE + 1}–{Math.min(currentPage * STUDENTS_PER_PAGE, students.length)} of {students.length} members
-            </p>
-          </section>
-
-          {/* Teachers Section */}
-          <section className="teachers-section">
-            <div className="section-header">
-              <h2>Admins &amp; Current Holdings</h2>
-              <span className="section-badge">{teachers.length} admins</span>
+              <select
+                className="filter-dropdown"
+                value={activeFilter}
+                onChange={(e) => handleFilterChange(e.target.value)}
+              >
+                {filterOptions.map((opt) => (
+                  <option key={opt.value} value={opt.value}>{opt.label}</option>
+                ))}
+              </select>
             </div>
 
-            <div className="teachers-list-table">
-              {teachers.map((teacher) => {
-                const dt = processTeacherForDisplay(teacher);
-                const acquired = getAcquiredStudents(teacher._id);
-                const isExpanded = expandedTeachers[teacher._id];
+            {/* Students Table (All Students / My Team) */}
+            {activeFilter !== 'admins' && (
+              <>
+                <div className="students-table-wrapper">
+                  <table className="students-table">
+                    <thead>
+                      <tr>
+                        <th>#</th>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Wallet Address</th>
+                        <th>Skills</th>
+                        <th>Base Price</th>
+                        <th>Earned</th>
+                        <th>Acquired By</th>
+                        {activeFilter === 'all' && <th>Action</th>}
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {paginatedStudents.length === 0 ? (
+                        <tr>
+                          <td colSpan={activeFilter === 'all' ? 9 : 8} className="no-results">
+                            {searchQuery ? 'No members match your search.' : activeFilter === 'myteam' ? 'You have not acquired any members yet.' : 'No available members.'}
+                          </td>
+                        </tr>
+                      ) : (
+                        paginatedStudents.map((student, index) => {
+                          const d = processStudentForDisplay(student);
+                          const isCopied = copiedStates[d.id] || false;
+                          const rowNumber = (currentPage - 1) * STUDENTS_PER_PAGE + index + 1;
 
-                return (
-                  <div key={dt.id} className="teacher-row">
-                    <div className="teacher-row-main">
-                      <div className="teacher-col teacher-col-name">
-                        <span className="teacher-avatar">{dt.name.charAt(0).toUpperCase()}</span>
-                        <div>
-                          <div className="teacher-name">{dt.name}</div>
-                          <div className="teacher-spec">{dt.specialization}</div>
-                        </div>
-                      </div>
-                      <div className="teacher-col teacher-col-email">
-                        <span className="col-label">Email</span>
-                        <span>{dt.email}</span>
-                      </div>
-                      <div className="teacher-col teacher-col-purse">
-                        <span className="col-label">Purse</span>
-                        <span className="purse-amount">{dt.purse} YARC</span>
-                      </div>
-                      <div className="teacher-col teacher-col-toggle">
+                          return (
+                            <tr key={d.id} className={!d.isAvailable ? 'row-acquired' : ''}>
+                              <td className="col-num">{rowNumber}</td>
+                              <td className="col-name">{d.name}</td>
+                              <td className="col-email">
+                                <span
+                                  className="email-link"
+                                  onClick={() => handleEmailClick(d.email)}
+                                  title={`Send email to ${d.email}`}
+                                >
+                                  {d.email}
+                                </span>
+                              </td>
+                              <td className="col-wallet">
+                                <div className="wallet-cell">
+                                  <span className="wallet-text" title={d.walletAddress}>
+                                    {d.walletAddress
+                                      ? `${d.walletAddress.slice(0, 8)}...${d.walletAddress.slice(-6)}`
+                                      : '—'}
+                                  </span>
+                                  {d.walletAddress && (
+                                    <button
+                                      className={`copy-btn ${isCopied ? 'copied' : ''}`}
+                                      onClick={() => handleCopyWallet(d.id, d.walletAddress)}
+                                      title="Copy wallet address"
+                                    >
+                                      {isCopied ? (
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                                          <path d="M20 6L9 17L4 12" strokeLinecap="round" strokeLinejoin="round" />
+                                        </svg>
+                                      ) : (
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                                          <rect x="9" y="9" width="13" height="13" rx="2" ry="2" />
+                                          <path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1" />
+                                        </svg>
+                                      )}
+                                    </button>
+                                  )}
+                                </div>
+                              </td>
+                              <td className="col-skills">
+                                <div className="skills-cell">
+                                  {d.skills.slice(0, 2).map((skill, i) => (
+                                    <span key={i} className="skill-tag">{skill}</span>
+                                  ))}
+                                  {d.skills.length > 2 && (
+                                    <span className="skill-more">+{d.skills.length - 2}</span>
+                                  )}
+                                </div>
+                              </td>
+                              <td className="col-price">{d.basePrice} YARC</td>
+                              <td className="col-earned">{d.currentBid} YARC</td>
+                              <td className="col-status">
+                                {student.ownedBy ? (
+                                  <span className="status-badge acquired">
+                                    {getTeacherNameById(student.ownedBy)}
+                                  </span>
+                                ) : (
+                                  <span className="status-badge available">Available</span>
+                                )}
+                              </td>
+                              {activeFilter === 'all' && (
+                                <td className="col-action">
+                                  {d.isAvailable ? (
+                                    <button
+                                      className="bid-button"
+                                      onClick={() => setSelectedStudent(d)}
+                                    >
+                                      Place Bid
+                                    </button>
+                                  ) : (
+                                    <button className="bid-button acquired" disabled>
+                                      Acquired
+                                    </button>
+                                  )}
+                                </td>
+                              )}
+                            </tr>
+                          );
+                        })
+                      )}
+                    </tbody>
+                  </table>
+                </div>
+
+                {/* Student Pagination */}
+                {totalStudentPages > 1 && (
+                  <div className="pagination">
+                    <button
+                      className="page-btn"
+                      onClick={() => setCurrentPage((p) => Math.max(p - 1, 1))}
+                      disabled={currentPage === 1}
+                    >
+                      &#8592; Prev
+                    </button>
+                    <div className="page-numbers">
+                      {Array.from({ length: totalStudentPages }, (_, i) => i + 1).map((page) => (
                         <button
-                          className="toggle-btn"
-                          onClick={() => toggleTeacherDropdown(teacher._id)}
+                          key={page}
+                          className={`page-num ${currentPage === page ? 'active' : ''}`}
+                          onClick={() => setCurrentPage(page)}
                         >
-                          Acquired Members ({acquired.length})
-                          <span className={`arrow ${isExpanded ? 'up' : 'down'}`}>&#9660;</span>
+                          {page}
                         </button>
-                      </div>
+                      ))}
                     </div>
-
-                    {isExpanded && (
-                      <div className="teacher-acquired-list">
-                        {acquired.length > 0 ? (
-                          acquired.map((s) => (
-                            <div key={s._id} className="acquired-row">
-                              <span className="acquired-name">{s.name}</span>
-                              <span className="acquired-email">{s.email}</span>
-                              <span className="acquired-balance">{s.yarBalance} YARC</span>
-                            </div>
-                          ))
-                        ) : (
-                          <div className="no-acquisitions">No members acquired yet</div>
-                        )}
-                      </div>
-                    )}
+                    <button
+                      className="page-btn"
+                      onClick={() => setCurrentPage((p) => Math.min(p + 1, totalStudentPages))}
+                      disabled={currentPage === totalStudentPages}
+                    >
+                      Next &#8594;
+                    </button>
                   </div>
-                );
-              })}
-            </div>
+                )}
+                {filteredStudents.length > 0 && (
+                  <p className="pagination-info">
+                    Showing {(currentPage - 1) * STUDENTS_PER_PAGE + 1}–{Math.min(currentPage * STUDENTS_PER_PAGE, filteredStudents.length)} of {filteredStudents.length} members
+                  </p>
+                )}
+              </>
+            )}
+
+            {/* Admins View */}
+            {activeFilter === 'admins' && (
+              <>
+                <div className="teachers-list-table">
+                  {paginatedTeachers.length === 0 ? (
+                    <div className="no-results-admin">No admins match your search.</div>
+                  ) : (
+                    paginatedTeachers.map((teacher) => {
+                      const dt = processTeacherForDisplay(teacher);
+                      const acquired = getAcquiredStudents(teacher._id);
+                      const isExpanded = expandedTeachers[teacher._id];
+
+                      return (
+                        <div key={dt.id} className="teacher-row">
+                          <div className="teacher-row-main">
+                            <div className="teacher-col teacher-col-name">
+                              <span className="teacher-avatar">{dt.name.charAt(0).toUpperCase()}</span>
+                              <div>
+                                <div className="teacher-name">{dt.name}</div>
+                                <div className="teacher-spec">{dt.specialization}</div>
+                              </div>
+                            </div>
+                            <div className="teacher-col teacher-col-email">
+                              <span className="col-label">Email</span>
+                              <span>{dt.email}</span>
+                            </div>
+                            <div className="teacher-col teacher-col-purse">
+                              <span className="col-label">Purse</span>
+                              <span className="purse-amount">{dt.purse} YARC</span>
+                            </div>
+                            <div className="teacher-col teacher-col-toggle">
+                              <button
+                                className="toggle-btn"
+                                onClick={() => toggleTeacherDropdown(teacher._id)}
+                              >
+                                Acquired Members ({acquired.length})
+                                <span className={`arrow ${isExpanded ? 'up' : 'down'}`}>&#9660;</span>
+                              </button>
+                            </div>
+                          </div>
+
+                          {isExpanded && (
+                            <div className="teacher-acquired-list">
+                              {acquired.length > 0 ? (
+                                acquired.map((s) => (
+                                  <div key={s._id} className="acquired-row">
+                                    <span className="acquired-name">{s.name}</span>
+                                    <span className="acquired-email">{s.email}</span>
+                                    <span className="acquired-balance">{s.yarBalance} YARC</span>
+                                  </div>
+                                ))
+                              ) : (
+                                <div className="no-acquisitions">No members acquired yet</div>
+                              )}
+                            </div>
+                          )}
+                        </div>
+                      );
+                    })
+                  )}
+                </div>
+
+                {/* Teacher Pagination */}
+                {totalTeacherPages > 1 && (
+                  <div className="pagination">
+                    <button
+                      className="page-btn"
+                      onClick={() => setTeacherPage((p) => Math.max(p - 1, 1))}
+                      disabled={teacherPage === 1}
+                    >
+                      &#8592; Prev
+                    </button>
+                    <div className="page-numbers">
+                      {Array.from({ length: totalTeacherPages }, (_, i) => i + 1).map((page) => (
+                        <button
+                          key={page}
+                          className={`page-num ${teacherPage === page ? 'active' : ''}`}
+                          onClick={() => setTeacherPage(page)}
+                        >
+                          {page}
+                        </button>
+                      ))}
+                    </div>
+                    <button
+                      className="page-btn"
+                      onClick={() => setTeacherPage((p) => Math.min(p + 1, totalTeacherPages))}
+                      disabled={teacherPage === totalTeacherPages}
+                    >
+                      Next &#8594;
+                    </button>
+                  </div>
+                )}
+                {filteredTeachers.length > 0 && (
+                  <p className="pagination-info">
+                    Showing {(teacherPage - 1) * TEACHERS_PER_PAGE + 1}–{Math.min(teacherPage * TEACHERS_PER_PAGE, filteredTeachers.length)} of {filteredTeachers.length} admins
+                  </p>
+                )}
+              </>
+            )}
           </section>
         </div>
 
