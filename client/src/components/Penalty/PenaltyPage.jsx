@@ -1,9 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import "./PenaltyPage.css";
+import { useLocation } from "react-router-dom";
 
 const Penalty = () => {
-  const [candidateWallet, setCandidateWallet] = useState("");
+  // const [candidateWallet, setCandidateWallet] = useState("");
+  const location = useLocation();
+  const prefillWallet = location.state?.studentWallet || "";
   const [amount, setAmount] = useState("");
   const [reason, setReason] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -33,6 +36,14 @@ const Penalty = () => {
       return;
     }
 
+    if (!prefillWallet) {
+      setMessage({
+        text: "Student wallet is required",
+        type: "error",
+      });
+      return;
+    }
+
     setIsLoading(true);
     setMessage({ text: "", type: "" });
 
@@ -47,7 +58,7 @@ const Penalty = () => {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            fromWallet: candidateWallet,   // student
+            fromWallet: prefillWallet,   // student
             toWallet: teacherWallet,       // teacher
             amount: amount.toString(),
             description: reason || "",
@@ -67,7 +78,7 @@ const Penalty = () => {
       });
 
       // Reset form
-      setCandidateWallet("");
+      // setCandidateWallet("");
       setAmount("");
       setReason("");
 
@@ -76,7 +87,7 @@ const Penalty = () => {
     } catch (error) {
       console.error("Backend Error:", error);
       setMessage({
-        text: "Failed to apply penalty ❌",
+        text: "Failed to apply penalty",
         type: "error",
       });
     } finally {
@@ -101,9 +112,9 @@ const Penalty = () => {
             <input
               type="text"
               placeholder="Enter student wallet address"
-              value={candidateWallet}
-              onChange={(e) => setCandidateWallet(e.target.value)}
-              required
+              value={prefillWallet}
+              readOnly
+              style={{ cursor: "not-allowed", opacity: 0.7 }}
             />
 
             <label>Deduction Amount (YARC)</label>

@@ -1,84 +1,82 @@
 import React, { useState } from "react";
+import { useLocation } from "react-router-dom";
 import "./NFT.css";
 
 const NFT = () => {
-  const [studentWallet, setStudentWallet] = useState("");
+  const location = useLocation();
+  const prefillWallet = location.state?.studentWallet || "";
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [message, setMessage] = useState({ text: "", type: "" });
 
   const handleSubmit = async (e) => {
-  e.preventDefault();
+    e.preventDefault();
 
-  const teacherWallet = localStorage.getItem("walletAddress");
+    const teacherWallet = localStorage.getItem("walletAddress");
 
-  if (!teacherWallet) {
-    setMessage({
-      text: "Teacher wallet not found. Please login again.",
-      type: "error",
-    });
-    return;
-  }
-
-  if (!studentWallet) {
-    setMessage({
-      text: "Student wallet is required",
-      type: "error",
-    });
-    return;
-  }
-
-  setIsLoading(true);
-  setMessage({ text: "", type: "" });
-
-  const baseUrl = import.meta.env.VITE_BASE_URL;
-
-  try {
-    const response = await fetch(`${baseUrl}/mint/nft`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        title,
-        description,
-        assignedTo: studentWallet,
-        assignedBy: teacherWallet,
-      }),
-    });
-
-    const data = await response.json();
-
-    if (!response.ok) {
-      throw new Error(data.message || "Something went wrong");
+    if (!teacherWallet) {
+      setMessage({
+        text: "Teacher wallet not found. Please login again.",
+        type: "error",
+      });
+      return;
     }
 
-    const txUrl = `https://sepolia.etherscan.io/tx/${data.txHash}`;
+    if (!prefillWallet) {
+      setMessage({
+        text: "Student wallet is required",
+        type: "error",
+      });
+      return;
+    }
 
-    setMessage({
-      text: `NFT minted! Token ID: ${data.tokenId}`,
-      type: "success",
-    });
+    setIsLoading(true);
+    setMessage({ text: "", type: "" });
 
-    console.log("Tx:", txUrl);
+    const baseUrl = import.meta.env.VITE_BASE_URL;
 
-    setStudentWallet("");
-    setTitle("");
-    setDescription("");
+    try {
+      const response = await fetch(`${baseUrl}/mint/nft`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          title,
+          description,
+          assignedTo: prefillWallet,
+          assignedBy: teacherWallet,
+        }),
+      });
 
-  } catch (error) {
-    console.error("NFT Error:", error);
+      const data = await response.json();
 
-    setMessage({
-      text: error.message,
-      type: "error",
-    });
+      if (!response.ok) {
+        throw new Error(data.message || data.error);
+      }
 
-  } finally {
-    setIsLoading(false);
-  }
-};
+      const txUrl = `https://sepolia.etherscan.io/tx/${data.txHash}`;
+
+      setMessage({
+        text: `NFT minted! Token ID: ${data.tokenId}`,
+        type: "success",
+      });
+
+      console.log("Tx:", txUrl);
+
+      setTitle("");
+      setDescription("");
+    } catch (error) {
+      console.error("NFT Error:", error);
+      setMessage({
+        text: error.message,
+        type: "error",
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   return (
     <div className="nft-wrapper">
@@ -96,10 +94,9 @@ const NFT = () => {
             <label>Student Wallet Address</label>
             <input
               type="text"
-              placeholder="Enter student wallet address"
-              value={studentWallet}
-              onChange={(e) => setStudentWallet(e.target.value)}
-              required
+              value={prefillWallet}
+              readOnly
+              style={{ cursor: "not-allowed", opacity: 0.7 }}
             />
 
             <label>NFT Title</label>

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import "./Dex.css";
+import { ethers } from "ethers";
 
 export default function Dex() {
 
@@ -43,51 +44,105 @@ export default function Dex() {
   }, [walletAddress, showHistory]);
 
   const handleConvert = async (e) => {
-    e.preventDefault();
+  e.preventDefault();
 
-    if (!yarcAmount || yarcAmount <= 0) {
-      alert("Enter valid YARC amount");
+  if (!yarcAmount || yarcAmount <= 0) {
+    alert("Enter valid YARC amount");
+    return;
+  }
+
+  try {
+    setLoading(true);
+
+    if (!window.ethereum) {
+      alert("Please install MetaMask");
       return;
     }
 
-    try {
-      setLoading(true);
+    const provider = new ethers.BrowserProvider(window.ethereum);
+    const signer = await provider.getSigner();
+    const userAddress = await signer.getAddress();
 
-      const baseUrl = import.meta.env.VITE_BASE_URL;
+    const YAR_TOKEN_ADDRESS = import.meta.env.VITE_YAR_CONTRACT_ADDRESS;
+    const DEX_ADDRESS = import.meta.env.VITE_DEX_CONTRACT_ADDRESS;
 
-      const response = await fetch(
-        `${baseUrl}/convert`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify({
-            walletAddress: walletAddress,
-            yarAmount: Number(yarcAmount)
-          })
-        }
-      );
+    const yarAbi = [
+      "function approve(address spender, uint256 amount) public returns (bool)",
+      "function allowance(address owner, address spender) view returns (uint256)",
+      "function balanceOf(address account) view returns (uint256)",
+      "function decimals() view returns (uint8)"
+    ];
 
-      const data = await response.json();
+    const dexAbi = [
+      "function convertYARtoUSD(uint256 amount) public"
+    ];
 
-      console.log("Backend response:", data);
+    const yarToken = new ethers.Contract(YAR_TOKEN_ADDRESS, yarAbi, signer);
+    const dex = new ethers.Contract(DEX_ADDRESS, dexAbi, signer);
 
-      if (data.success) {
-        setCurrentUsd(data.convertedUsd || 0);
-        setTotalUsd(data.totalUsd || 0);
-        setYarcAmount("");
-      } else {
-        alert(data.message || "Conversion failed");
-      }
+    const decimals = await yarToken.decimals();
+    const amount = ethers.parseUnits(yarcAmount.toString(), decimals);
 
-    } catch (error) {
-      console.error(error);
-      alert("Server error");
-    } finally {
-      setLoading(false);
+    // ✅ 1️⃣ CHECK BALANCE FIRST (FIXED)
+    const balance = await yarToken.balanceOf(userAddress);
+    if (balance < amount) {
+      alert("Not enough YAR balance");
+      return;
     }
-  };
+
+    // ✅ 2️⃣ CHECK ALLOWANCE
+    const currentAllowance = await yarToken.allowance(userAddress, DEX_ADDRESS);
+
+    if (currentAllowance < amount) {
+      const approveTx = await yarToken.approve(DEX_ADDRESS, amount);
+      await approveTx.wait();
+      console.log("Approved!");
+    }
+
+    // ✅ 3️⃣ CONVERT
+    const convertTx = await dex.convertYARtoUSD(amount);
+    const receipt = await convertTx.wait();
+
+    if (receipt.status !== 1) {
+      alert("Transaction failed on blockchain");
+      return;
+    }
+
+    console.log("Converted!", convertTx.hash);
+
+    // ✅ 4️⃣ BACKEND CALL
+    const baseUrl = import.meta.env.VITE_BASE_URL;
+
+    const response = await fetch(`${baseUrl}/dex/convert`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        walletAddress: userAddress.toLowerCase(),
+        yarAmount: Number(yarcAmount),
+        txHash: convertTx.hash
+      })
+    });
+
+    const data = await response.json();
+
+    if (data.success) {
+      setCurrentUsd(data.convertedUsd || 0);
+      setTotalUsd(data.totalUsd || 0);
+      setYarcAmount("");
+    } else {
+      alert(data.message || "Conversion failed");
+    }
+
+  } catch (error) {
+    console.error(error);
+    alert(error.reason || error.message || "Transaction failed");
+  } finally {
+    setLoading(false);
+  }
+};
+
 
   // 🔥 Format Date
   const formatDate = (dateString) => {

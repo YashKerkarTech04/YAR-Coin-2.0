@@ -178,22 +178,22 @@ const TeacherHome = () => {
   };
 
   const handleLogout = () => {
-    Swal.fire({
-      title: 'Are you sure?',
-      text: 'You will be logged out from the system!',
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonColor: '#3085d6',
-      cancelButtonColor: '#d33',
-      confirmButtonText: 'Yes, logout!',
-    }).then((result) => {
-      if (result.isConfirmed) {
-        localStorage.clear();
-        Swal.fire({ title: 'Logged out!', text: 'You have been successfully logged out.', icon: 'success', timer: 1500, showConfirmButton: false }).then(() => {
-          navigate('/');
-        });
-      }
-    });
+    // Swal.fire({
+    //   title: 'Are you sure?',
+    //   text: 'You will be logged out from the system!',
+    //   icon: 'warning',
+    //   showCancelButton: true,
+    //   confirmButtonColor: '#3085d6',
+    //   cancelButtonColor: '#d33',
+    //   confirmButtonText: 'Yes, logout!',
+    // }).then((result) => {
+    //   if (result.isConfirmed) {
+    //     localStorage.clear();
+    //     Swal.fire({ title: 'Logged out!', text: 'You have been successfully logged out.', icon: 'success', timer: 1500, showConfirmButton: false }).then(() => {
+    //       navigate('/');
+    //     });
+    //   }
+    // });
   };
 
   const handleFilterChange = (value) => {
@@ -209,7 +209,6 @@ const TeacherHome = () => {
     setTeacherPage(1);
   };
 
-  // Filtered students based on activeFilter and searchQuery
   const getFilteredStudents = () => {
     let base = [];
     if (activeFilter === 'all') {
@@ -227,7 +226,6 @@ const TeacherHome = () => {
     );
   };
 
-  // Filtered teachers for Admins view
   const getFilteredTeachers = () => {
     if (!searchQuery.trim()) return teachers;
     const q = searchQuery.toLowerCase();
@@ -239,7 +237,6 @@ const TeacherHome = () => {
     );
   };
 
-  // Student pagination
   const filteredStudents = getFilteredStudents();
   const totalStudentPages = Math.ceil(filteredStudents.length / STUDENTS_PER_PAGE);
   const paginatedStudents = filteredStudents.slice(
@@ -247,7 +244,6 @@ const TeacherHome = () => {
     currentPage * STUDENTS_PER_PAGE
   );
 
-  // Teacher pagination (admins view)
   const filteredTeachers = getFilteredTeachers();
   const totalTeacherPages = Math.ceil(filteredTeachers.length / TEACHERS_PER_PAGE);
   const paginatedTeachers = filteredTeachers.slice(
@@ -264,7 +260,6 @@ const TeacherHome = () => {
   const getSectionTitle = () => {
     if (activeFilter === 'all') return 'Available Members for Bidding';
     if (activeFilter === 'myteam') return 'My Team';
-
     return 'Admins & Current Holdings';
   };
 
@@ -308,13 +303,11 @@ const TeacherHome = () => {
         <div className="bidding-container">
 
           <section className="students-section">
-            {/* Section Header */}
             <div className="section-header">
               <h2>{getSectionTitle()}</h2>
               <span className="section-badge">{getSectionBadge()}</span>
             </div>
 
-            {/* Search + Filter Bar */}
             <div className="search-filter-bar">
               <div className="search-input-wrapper">
                 <svg className="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -349,7 +342,6 @@ const TeacherHome = () => {
               </select>
             </div>
 
-            {/* Students Table (All Students / My Team) */}
             {activeFilter !== 'admins' && (
               <>
                 <div className="students-table-wrapper">
@@ -364,7 +356,6 @@ const TeacherHome = () => {
                         <th>Base Price</th>
                         <th>Earned</th>
                         <th>Acquired By</th>
-
                         {activeFilter === "myteam" && <th>Penalty</th>}
                         {activeFilter === "myteam" && <th>NFT</th>}
                         {activeFilter === 'all' && <th>Action</th>}
@@ -373,7 +364,7 @@ const TeacherHome = () => {
                     <tbody>
                       {paginatedStudents.length === 0 ? (
                         <tr>
-                          <td colSpan={activeFilter === 'all' ? 9 : 8} className="no-results">
+                          <td colSpan={activeFilter === 'all' ? 9 : 10} className="no-results">
                             {searchQuery ? 'No members match your search.' : activeFilter === 'myteam' ? 'You have not acquired any members yet.' : 'No available members.'}
                           </td>
                         </tr>
@@ -449,14 +440,12 @@ const TeacherHome = () => {
                                 <td className="col-penalty">
                                   <button
                                     className="action-btn penalty-btn"
-                                    onClick={() => {
-                                      // handle penalty logic here
-                                      console.log('Penalty clicked for', d.id);
-                                    }}
+                                    onClick={() => 
+                                      navigate('/penalty',{
+                                        state: {studentWallet: d.walletAddress},
+                                      })}
                                   >
-                                    <Link to="/penalty">
-                                      Penalty
-                                    </Link>
+                                    Penalty
                                   </button>
                                 </td>
                               )}
@@ -464,19 +453,16 @@ const TeacherHome = () => {
                                 <td className="col-nft">
                                   <button
                                     className="action-btn nft-btn"
-                                    onClick={() => {
-                                      // handle NFT logic here
-                                      console.log('NFT clicked for', d.id);
-                                    }}
+                                    onClick={() =>
+                                      navigate('/nft', {
+                                        state: { studentWallet: d.walletAddress },
+                                      })
+                                    }
                                   >
-                                    <Link to="/nft" className="no-underline">
-                                      Grant Achievement
-                                    </Link>
+                                    Grant Achievement
                                   </button>
                                 </td>
                               )}
-
-
 
                               {activeFilter === 'all' && (
                                 <td className="col-action">
@@ -502,7 +488,6 @@ const TeacherHome = () => {
                   </table>
                 </div>
 
-                {/* Student Pagination */}
                 {totalStudentPages > 1 && (
                   <div className="pagination">
                     <button
@@ -540,7 +525,6 @@ const TeacherHome = () => {
               </>
             )}
 
-            {/* Admins View */}
             {activeFilter === 'admins' && (
               <>
                 <div className="teachers-list-table">
@@ -602,7 +586,6 @@ const TeacherHome = () => {
                   )}
                 </div>
 
-                {/* Teacher Pagination */}
                 {totalTeacherPages > 1 && (
                   <div className="pagination">
                     <button
@@ -642,7 +625,6 @@ const TeacherHome = () => {
           </section>
         </div>
 
-        {/* Bid Modal */}
         {selectedStudent && (
           <div className="modal-overlay">
             <div className="bid-modal">

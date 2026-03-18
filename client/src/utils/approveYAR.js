@@ -1,7 +1,7 @@
 import { ethers } from "ethers";
 
-const CONTRACT_ADDRESS = "0x42861CE1c5A357EdE7bd0CAe9A14B1AC95E56061";
-const ADMIN_WALLET_ADDRESS = "0xec08c77C7B4bE758559d01bDC7C04EBd82AD6Cfe";
+const CONTRACT_ADDRESS = import.meta.env.VITE_YAR_CONTRACT_ADDRESS;
+const ADMIN_WALLET_ADDRESS = import.meta.env.VITE_ADMIN_WALLET_ADDRESS;
 
 export const approveYAR = async () => {
   try {
