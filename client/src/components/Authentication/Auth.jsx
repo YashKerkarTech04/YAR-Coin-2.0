@@ -9,33 +9,28 @@ export default function Auth() {
   const baseUrl = import.meta.env.VITE_BASE_URL;
   const [tab, setTab] = useState("register");
   const [role, setRole] = useState("student");
-  const [isLoading, setIsLoading] = useState(false); //Disables form buttons during API calls (Register & Login button will get disabled)
-  const [message, setMessage] = useState({ text: "", type: "" }); //to show success or error message
+  const [isLoading, setIsLoading] = useState(false); 
+  const [message, setMessage] = useState({ text: "", type: "" }); 
   const [walletAddress, setWalletAddress] = useState("");
   const navigate = useNavigate();
 
-  // (a) Student Register
   const [studentFormData, setStudentFormData] = useState({
     name: "", email: "", skills: "", achievements: "", basePrice: ""
   });
 
-  // (b) Teacher registration form state
   const [teacherFormData, setTeacherFormData] = useState({
     name: "", email: "", specialization: ""
   });
 
-  // (c) Login form
   const [loginData, setLoginData] = useState({
     email: "", walletAddress: ""
   });
 
-  // Handle student form changes
   const handleStudentChange = (e) => {
     setStudentFormData({ ...studentFormData, [e.target.name]: e.target.value });
     if (message.text) setMessage({ text: "", type: "" });
   };
 
-  // Handle teacher form changes
   const handleTeacherChange = (e) => {
     setTeacherFormData({ ...teacherFormData, [e.target.name]: e.target.value });
     if (message.text) setMessage({ text: "", type: "" });
@@ -48,12 +43,11 @@ export default function Auth() {
 
   const showMessage = (text, type) => {
     setMessage({ text, type });
-    setTimeout(() => setMessage({ text: "", type: "" }), 5000); //Display success or error message
+    setTimeout(() => setMessage({ text: "", type: "" }), 5000); 
   };
 
   const handleConnectWallet = async (e) => {
-    e.preventDefault(); // prevent form submit
-
+    e.preventDefault(); 
     const address = await connectWallet();
     if (address) {
       setWalletAddress(address);
@@ -73,10 +67,10 @@ export default function Auth() {
 
     try {
       if (role === "teacher") {
-        showMessage("Setting up your wallet for token distributon...", "success");
+        showMessage("Setting up your wallet...", "success");
       }
       else {
-        showMessage("Setting up your wallet for penalties & transactions...", "success");
+        showMessage("Setting up your wallet...", "success");
       }
 
 
@@ -86,8 +80,6 @@ export default function Auth() {
         setIsLoading(false);
         return;
       }
-
-      // Backend Registration
 
       const url = role === "student"
         ? `${baseUrl}/api/students`
@@ -127,7 +119,6 @@ export default function Auth() {
         walletAddress: walletAddress
       });
 
-      // Clear forms
       setStudentFormData({
         name: "",
         email: "",
@@ -151,9 +142,7 @@ export default function Auth() {
       setIsLoading(false);
     }
   };
-
-
-  // Submit login form 
+ 
   const handleLogin = async (e) => {
     e.preventDefault();
     setIsLoading(true);
@@ -177,7 +166,6 @@ export default function Auth() {
       const user = data.user;
       const userRole = data.role;
 
-      // STORE USER DATA IN LOCALSTORAGE
       localStorage.setItem("userEmail", user.email);
       localStorage.setItem("userName", user.name);
       localStorage.setItem("userRole", userRole);
@@ -230,8 +218,6 @@ export default function Auth() {
     }
   };
 
-
-  // Get current form data based on role
   const getCurrentFormData = () => {
     return role === "student" ? studentFormData : teacherFormData;
   };

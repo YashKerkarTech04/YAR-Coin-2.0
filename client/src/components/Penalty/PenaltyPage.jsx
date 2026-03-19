@@ -4,7 +4,6 @@ import "./PenaltyPage.css";
 import { useLocation } from "react-router-dom";
 
 const Penalty = () => {
-  // const [candidateWallet, setCandidateWallet] = useState("");
   const location = useLocation();
   const prefillWallet = location.state?.studentWallet || "";
   const [amount, setAmount] = useState("");
@@ -15,7 +14,6 @@ const Penalty = () => {
 
   const navigate = useNavigate();
 
-  // 🔐 Protect Route (Only Teacher)
   useEffect(() => {
     const role = localStorage.getItem("userRole");
     if (role !== "teacher") {
@@ -27,11 +25,11 @@ const Penalty = () => {
   useEffect(() => {
   if (isLoading) {
     const interval = setInterval(() => {
-      setDotCount(prev => (prev + 1) % 4); // 0,1,2,3
-    }, 500); // 500ms per dot
+      setDotCount(prev => (prev + 1) % 4); 
+    }, 500); 
     return () => clearInterval(interval);
   } else {
-    setDotCount(0); // reset when not loading
+    setDotCount(0); 
   }
 }, [isLoading]);
 
@@ -70,8 +68,8 @@ const Penalty = () => {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            fromWallet: prefillWallet,   // student
-            toWallet: teacherWallet,       // teacher
+            fromWallet: prefillWallet,   
+            toWallet: teacherWallet,       
             amount: amount.toString(),
             description: reason || "",
           }),
@@ -89,7 +87,6 @@ const Penalty = () => {
         type: "success",
       });
 
-      // Reset form
       setAmount("");
       setReason("");
 

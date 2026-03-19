@@ -13,8 +13,6 @@ function StudentChatInterface() {
   const navigate = useNavigate();
 
   const baseUrl = import.meta.env.VITE_BASE_URL;
-
-  // Load user data from localStorage (set during login)
   useEffect(() => {
     const userId = localStorage.getItem("userId");
     const userRole = localStorage.getItem("userRole");
@@ -33,15 +31,12 @@ function StudentChatInterface() {
     });
   }, [navigate]);
 
-  // Fetch team members once user is set
   useEffect(() => {
     if (!user || user.role !== "student") return;
 
     const fetchTeam = async () => {
       try {
         setLoading(true);
-
-        // 1. Fetch all students and find the current one
         const studentsRes = await fetch(`${baseUrl}/api/students`);
         if (!studentsRes.ok) throw new Error("Failed to fetch students");
         const allStudents = await studentsRes.json();
@@ -50,14 +45,12 @@ function StudentChatInterface() {
         if (!currentStudent) throw new Error("Current student not found");
 
         const teacherId = currentStudent.ownedBy;
-
         if (!teacherId) {
           setTeamMembers([{ name: "No mentor assigned yet", role: "System" }]);
           setLoading(false);
           return;
         }
 
-        // 2. Fetch all teachers and find the mentor
         const teachersRes = await fetch(`${baseUrl}/api/teachers`);
         if (!teachersRes.ok) throw new Error("Failed to fetch teachers");
         const allTeachers = await teachersRes.json();
@@ -65,12 +58,10 @@ function StudentChatInterface() {
         const teacher = allTeachers.find((t) => t._id === teacherId);
         if (!teacher) throw new Error("Mentor not found");
 
-        // 3. Filter other students owned by the same teacher
         const teamStudents = allStudents.filter(
           (s) => s.ownedBy === teacherId && s._id !== user._id
         );
 
-        // Build team members list to display on side bar
         const members = [
           { name: teacher.name, role: "Mentor", _id: teacher._id },
           ...teamStudents.map((s) => ({ name: s.name, role: "Candidate", _id: s._id })),
@@ -87,10 +78,9 @@ function StudentChatInterface() {
     fetchTeam();
   }, [user, baseUrl]);
 
-  // Socket connection and message handling
+
   useEffect(() => {
     if (!user || user.role !== "student") return;
-
     const socketRole = "student";
     socket.emit("joinRoom", {
       userId: user._id,
@@ -100,7 +90,7 @@ function StudentChatInterface() {
     socket.on("previousMessages", (msgs) => {
       const formatted = msgs.map((msg) => ({
         text: msg.message,
-        senderId: msg.senderId,  // Store the actual sender ID
+        senderId: msg.senderId,  
         senderRole: msg.senderRole,
         _id: msg._id,
         timestamp: msg.createdAt,
@@ -111,7 +101,7 @@ function StudentChatInterface() {
     socket.on("receiveMessage", (msg) => {
       const newMsg = {
         text: msg.message,
-        senderId: msg.senderId,  // Store the actual sender ID
+        senderId: msg.senderId,  
         senderRole: msg.senderRole,
         _id: msg._id,
         timestamp: msg.createdAt,

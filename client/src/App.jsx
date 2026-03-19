@@ -10,16 +10,15 @@ import Penalty from "./components/Penalty/PenaltyPage";
 import PenaltyHistory from "./components/Penalty/PenaltyHistory";
 import NFT from "./components/NFT/NFT";
 import NFTHistory from "./components/NFT/NFTHistory";
+// import Graph from "./components/Graph/Graph";
 
 function App() {
   return (
     <Router>
       <Routes>
-        {/* <Route path="/" element={<Auth/>} /> */}
         <Route path="/auth" element={<Auth/>} />
         <Route path="/" element={<HomePage/>} />
         <Route path="/teacher-home" element={<TeacherHome />} />
-        {/* <Route path="/student-home" element={<StudentHome />} /> */}
         <Route path="/student/playground" element={<Playground/>} />
         <Route path="/student-workspace" element={<StudentChatInterface />} />
         <Route path="/teacher-workspace" element={<TeacherChatInterface />} />

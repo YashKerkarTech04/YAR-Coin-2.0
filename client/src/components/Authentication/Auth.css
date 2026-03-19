@@ -128,7 +128,7 @@
   justify-content: space-between;
 }
 
-.name-fields .input-group {
+.input-group {
   flex: 1;
   margin-bottom: 0;
 }
@@ -163,7 +163,6 @@
   box-shadow: 0 8px 25px rgba(102, 126, 234, 0.5);
 }
 
-/* ===================== BUTTON ===================== */
 .login-btn,
 .register-btn {
   width: 100%;
@@ -193,7 +192,6 @@
   box-shadow: none;
 }
 
-/* ===================== LOGIN / SIGNUP LINK ===================== */
 .signup-text {
   margin: 18px 0 12px 0;
   font-size: 0.95rem;
@@ -214,7 +212,6 @@
   background: rgba(167, 139, 250, 0.15);
 }
 
-/* ===================== MESSAGES ===================== */
 .auth-message {
   padding: 12px 15px;
   border-radius: 10px;
@@ -248,33 +245,7 @@
   }
 }
 
-/* ===================== PASSWORD STRENGTH ===================== */
-.password-strength {
-  margin-top: -12px;
-  margin-bottom: 15px;
-  font-size: 0.8rem;
-  padding: 5px;
-  border-radius: 5px;
-  text-align: center;
-  font-weight: 600;
-}
 
-.password-strength.weak {
-  background: rgba(220, 53, 69, 0.2);
-  color: #f8d7da;
-}
-
-.password-strength.medium {
-  background: rgba(255, 193, 7, 0.2);
-  color: #fff3cd;
-}
-
-.password-strength.strong {
-  background: rgba(40, 167, 69, 0.2);
-  color: #c6f6d5;
-}
-
-/* ===================== RESPONSIVENESS ===================== */
 @media (max-width: 768px) {
   .auth-box {
     padding: 40px 25px;

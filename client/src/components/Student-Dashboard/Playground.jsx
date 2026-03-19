@@ -76,7 +76,6 @@ const Playground = () => {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
-          "ngrok-skip-browser-warning": "true",
         },
       });
 
@@ -117,7 +116,6 @@ const Playground = () => {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
-          "ngrok-skip-browser-warning": "true",
         },
       });
 
@@ -230,7 +228,6 @@ const Playground = () => {
     );
   }
 
-  // Apply search and filter
   const filteredStudents = displayStudents.filter(student => {
     const q = searchQuery.toLowerCase().trim();
     const matchesSearch = !q ||
@@ -246,7 +243,6 @@ const Playground = () => {
     return matchesSearch && matchesFilter;
   });
 
-  // Pagination
   const totalPages = Math.ceil(filteredStudents.length / RECORDS_PER_PAGE);
   const paginatedStudents = filteredStudents.slice(
     (currentPage - 1) * RECORDS_PER_PAGE,
@@ -262,8 +258,6 @@ const Playground = () => {
         getTeacherNameById={getTeacherNameById}
       />
       <div className="playground">
-
-        {/* Search + Filter Bar */}
         <div className="playground-search-bar">
           <div className="search-wrapper">
             <svg className="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -292,7 +286,6 @@ const Playground = () => {
           </select>
         </div>
 
-        {/* Record count */}
         <div className="results-count">
           Showing {filteredStudents.length} record{filteredStudents.length !== 1 ? 's' : ''}
           {searchQuery && <span> for &ldquo;{searchQuery}&rdquo;</span>}
@@ -307,8 +300,6 @@ const Playground = () => {
             ) : (
               paginatedStudents.map(student => (
                 <div key={student.id} className={`student-row ${student.ownedBy ? 'row-acquired' : ''}`}>
-
-                  {/* Left: identity */}
                   <div className="row-identity">
                     <div className="row-avatar">
                       {student.name?.charAt(0).toUpperCase()}
@@ -324,7 +315,6 @@ const Playground = () => {
                     </div>
                   </div>
 
-                  {/* Status + Price */}
                   <div className="row-meta">
                     <div className={`status-badge ${student.ownedBy ? 'acquired' : student.currentBids.length > 0 ? 'bidding' : 'available'}`}>
                       {student.ownedBy ? 'Acquired' : student.currentBids.length > 0 ? 'Bidding' : 'Available'}
@@ -332,7 +322,6 @@ const Playground = () => {
                     <span className="base-price">{student.basePrice} YARC</span>
                   </div>
 
-                  {/* Skills */}
                   <div className="row-skills">
                     <span className="row-label">Skills</span>
                     <div className="skills-list">
@@ -342,7 +331,6 @@ const Playground = () => {
                     </div>
                   </div>
 
-                  {/* Achievements */}
                   <div className="row-achievements">
                     <span className="row-label">Achievements</span>
                     <div className="achievements-list">
@@ -352,7 +340,6 @@ const Playground = () => {
                     </div>
                   </div>
 
-                  {/* NFTs */}
                   {student.walletAddress && (
                     <div className="row-nfts">
                       <span className="row-label">NFTs</span>
@@ -377,7 +364,6 @@ const Playground = () => {
                     </div>
                   )}
 
-                  {/* Active Bids */}
                   {student.currentBids.length > 0 && (
                     <div className="row-bids">
                       <span className="row-label">Active Bids</span>
@@ -392,13 +378,11 @@ const Playground = () => {
                     </div>
                   )}
 
-                  {/* Acquisition info */}
                   {student.ownedBy && (
                     <div className="row-acquisition">
                       <span className="row-label">Acquired By</span>
                       <div className="acquisition-details">
                         <span className="teacher-name">{student.currentTeacher}</span>
-                        {/* <span className="acquisition-value">for {student.currentBid} YARC</span> */}
                       </div>
                     </div>
                   )}
@@ -408,7 +392,6 @@ const Playground = () => {
             )}
           </div>
 
-          {/* Pagination */}
           {totalPages > 1 && (
             <div className="pagination">
               <button

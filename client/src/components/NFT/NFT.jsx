@@ -14,11 +14,11 @@ const NFT = () => {
   useEffect(() => {
     if (isLoading) {
       const interval = setInterval(() => {
-        setDotCount(prev => (prev + 1) % 4); // 0,1,2,3
-      }, 500); // 500ms per dot
+        setDotCount(prev => (prev + 1) % 4); 
+      }, 500); 
       return () => clearInterval(interval);
     } else {
-      setDotCount(0); // reset when not loading
+      setDotCount(0); 
     }
   }, [isLoading]);
 
@@ -69,13 +69,13 @@ const NFT = () => {
       }
 
       // const txUrl = `https://sepolia.etherscan.io/tx/${data.txHash}`;
+      // console.log("Tx:", txUrl);
 
       setMessage({
         text: `NFT minted! Token ID: ${data.tokenId}`,
         type: "success",
       });
 
-      // console.log("Tx:", txUrl);
 
       setTitle("");
       setDescription("");

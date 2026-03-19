@@ -16,9 +16,9 @@ export default function Navbar({
   const storedUser = currentStudent;
 
   const handleLogout = () => {
-    localStorage.clear(); // clear all login data
+    localStorage.clear(); 
     if (onLogout) onLogout();
-    window.location.href = "/"; // redirect to home page
+    window.location.href = "/"; 
   };
 
   const toggleMobileMenu = () => {
@@ -66,8 +66,6 @@ export default function Navbar({
       </div>
 
       <div className="navbar-desktop">
-
-        {/* Profile Section */}
         <div className="profile-container" ref={profileRef}>
           <button className="profile-btn" onClick={toggleProfile}>
             <div className="profile-icon">👤</div>

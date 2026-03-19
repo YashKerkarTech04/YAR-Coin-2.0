@@ -3,7 +3,6 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import Swal from 'sweetalert2';
 import './TeacherHome.css';
 import TeacherNavbar from "../Navbar/TeacherNavbar";
-import { Link } from "react-router-dom";
 
 const STUDENTS_PER_PAGE = 10;
 const TEACHERS_PER_PAGE = 10;
@@ -27,9 +26,9 @@ const TeacherHome = () => {
   useEffect(() => {
     const timer = setTimeout(() => {
       fetchInitialData();
-    }, 5000);
+    }, 3000);
     return () => clearTimeout(timer);
-  }, []);
+  });
 
   const fetchInitialData = async () => {
     try {
@@ -38,8 +37,7 @@ const TeacherHome = () => {
       const studentsResponse = await fetch(`${baseUrl}/api/students`, {
         method: 'GET',
         headers: {
-          'Content-Type': 'application/json',
-          'ngrok-skip-browser-warning': 'true',
+          'Content-Type': 'application/json'
         },
       });
       if (!studentsResponse.ok)
@@ -49,8 +47,7 @@ const TeacherHome = () => {
       const teachersResponse = await fetch(`${baseUrl}/api/teachers`, {
         method: 'GET',
         headers: {
-          'Content-Type': 'application/json',
-          'ngrok-skip-browser-warning': 'true',
+          'Content-Type': 'application/json'
         },
       });
       if (!teachersResponse.ok)
@@ -177,24 +174,7 @@ const TeacherHome = () => {
     }
   };
 
-  const handleLogout = () => {
-    // Swal.fire({
-    //   title: 'Are you sure?',
-    //   text: 'You will be logged out from the system!',
-    //   icon: 'warning',
-    //   showCancelButton: true,
-    //   confirmButtonColor: '#3085d6',
-    //   cancelButtonColor: '#d33',
-    //   confirmButtonText: 'Yes, logout!',
-    // }).then((result) => {
-    //   if (result.isConfirmed) {
-    //     localStorage.clear();
-    //     Swal.fire({ title: 'Logged out!', text: 'You have been successfully logged out.', icon: 'success', timer: 1500, showConfirmButton: false }).then(() => {
-    //       navigate('/');
-    //     });
-    //   }
-    // });
-  };
+
 
   const handleFilterChange = (value) => {
     setActiveFilter(value);
@@ -280,7 +260,7 @@ const TeacherHome = () => {
   if (loading) {
     return (
       <>
-        <TeacherNavbar currentTeacher={currentTeacher} onLogout={handleLogout} />
+        <TeacherNavbar currentTeacher={currentTeacher}/>
         <div className="pl">
           <div className="pl__coin">
             <div className="pl__coin-flare"></div>
@@ -308,7 +288,7 @@ const TeacherHome = () => {
 
   return (
     <>
-      <TeacherNavbar currentTeacher={currentTeacher} onLogout={handleLogout} />
+      <TeacherNavbar currentTeacher={currentTeacher} />
       <div className="bidding-system">
         <div className="bidding-container">
 

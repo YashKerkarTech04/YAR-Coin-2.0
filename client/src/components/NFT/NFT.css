@@ -1,5 +1,3 @@
-/* NFT.css - Updated to match Penalty Page styling */
-
 .nft-wrapper {
   display: flex;
   justify-content: center;
@@ -117,7 +115,6 @@
   background: linear-gradient(135deg, #a0a0a0 0%, #808080 100%);
 }
 
-/* Loading state for button */
 .mint-btn.loading {
   position: relative;
   pointer-events: none;
@@ -142,7 +139,6 @@
   to { transform: rotate(360deg); }
 }
 
-/* Message Styles */
 .nft-message {
   padding: 1rem;
   margin-bottom: 1.5rem;
@@ -167,7 +163,6 @@
   box-shadow: 0 5px 15px rgba(198, 40, 40, 0.2);
 }
 
-/* Placeholder styling */
 .nft-card input::placeholder,
 .nft-card textarea::placeholder {
   color: black;
@@ -175,7 +170,6 @@
   font-style: italic;
 }
 
-/* Animations */
 @keyframes slideIn {
   from {
     opacity: 0;
@@ -198,7 +192,6 @@
   }
 }
 
-/* Responsive Design */
 @media (max-width: 768px) {
   .nft-wrapper {
     padding: 1rem;
@@ -237,7 +230,6 @@
   }
 }
 
-/* Dark mode support */
 @media (max-width:380px) {
   body {
     background: white;

@@ -1,4 +1,3 @@
-/* ─── Base ────────────────────────────────────────────────── */
 .playground {
   min-height: 100vh;
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
@@ -8,7 +7,6 @@
   overflow-y: hidden;
 }
 
-/* ─── Search + Filter Bar ─────────────────────────────────── */
 .playground-search-bar {
   display: flex;
   align-items: center;
@@ -118,7 +116,6 @@
   box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.2);
 }
 
-/* ─── Results Count ───────────────────────────────────────── */
 .results-count {
   text-align: center;
   font-size: 0.85rem;
@@ -131,13 +128,11 @@
   margin-bottom: 1.4rem;
 }
 
-/* ─── Content wrapper ─────────────────────────────────────── */
 .playground-content {
   max-width: 1100px;
   margin: 0 auto;
 }
 
-/* ─── Student List ────────────────────────────────────────── */
 .students-list {
   display: flex;
   flex-direction: column;
@@ -190,7 +185,6 @@
   background: linear-gradient(90deg, #ff6b6b, #ee5a52);
 }
 
-/* ─── Identity column ─────────────────────────────────────── */
 .row-identity {
   display: flex;
   align-items: flex-start;
@@ -251,7 +245,6 @@
   letter-spacing: 0.3px;
 }
 
-/* ─── Meta column ─────────────────────────────────────────── */
 .row-meta {
   display: flex;
   flex-direction: column;
@@ -294,7 +287,6 @@
   letter-spacing: -0.3px;
 }
 
-/* ─── Row Label ───────────────────────────────────────────── */
 .row-label {
   display: block;
   font-size: 0.68rem;
@@ -305,7 +297,6 @@
   margin-bottom: 0.35rem;
 }
 
-/* ─── Skills & Achievements ───────────────────────────────── */
 .skills-list,
 .achievements-list {
   display: flex;
@@ -334,7 +325,6 @@
   border: 1px solid #a7f3d0;
 }
 
-/* ─── NFTs ────────────────────────────────────────────────── */
 .row-nfts {
   grid-column: 1 / -1;
   border-top: 1px solid #f0f1f5;
@@ -355,7 +345,6 @@
   font-size: 0.82rem;
 }
 
-/* NFT Badge */
 .nft-badge {
   position: relative;
   width: 48px;
@@ -466,7 +455,6 @@
 .nft-item:nth-child(4n+3) .nft-badge { background: linear-gradient(135deg, #FFD93D, #F6C90E, #FFE57F); }
 .nft-item:nth-child(4n+4) .nft-badge { background: linear-gradient(135deg, #A8E6CF, #78C4B8, #C4F0D9); }
 
-/* ─── Bids row ────────────────────────────────────────────── */
 .row-bids {
   grid-column: 1 / -1;
   border-top: 1px solid #f0f1f5;
@@ -536,7 +524,6 @@
   font-size: 0.72rem;
 }
 
-/* ─── No Results ──────────────────────────────────────────── */
 .no-students {
   text-align: center;
   padding: 3.5rem 2rem;
@@ -553,7 +540,6 @@
   font-style: italic;
 }
 
-/* ─── Pagination ──────────────────────────────────────────── */
 .pagination {
   display: flex;
   justify-content: center;
@@ -597,7 +583,6 @@
   cursor: not-allowed;
 }
 
-/* ─── Loading ─────────────────────────────────────────────── */
 .loading-container {
   display: flex;
   justify-content: center;
@@ -629,7 +614,6 @@
   opacity: 0.75;
 }
 
-/* ─── Animations ──────────────────────────────────────────── */
 @keyframes shiny {
   0%   { transform: rotate(25deg) translate(-30%, -30%); }
   20%  { transform: rotate(25deg) translate(30%, 30%); }
@@ -648,7 +632,6 @@
   100% { transform: scale(1); }
 }
 
-/* ─── Responsive: Tablet ──────────────────────────────────── */
 @media (max-width: 1024px) {
   .student-row {
     grid-template-columns: 200px 150px 1fr 1fr;
@@ -678,7 +661,6 @@
   }
 }
 
-/* ─── Responsive: Mobile ──────────────────────────────────── */
 @media (max-width: 600px) {
   .playground {
     padding: 1rem 1rem 2.5rem;

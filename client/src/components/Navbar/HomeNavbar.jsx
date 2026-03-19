@@ -69,24 +69,22 @@ export default function HomeHeader() {
   };
 
   const scrollToSection = (sectionId) => (e) => {
-    e.preventDefault(); // Prevent default anchor behavior
+    e.preventDefault(); 
     const section = document.getElementById(sectionId);
     if (section) {
       section.scrollIntoView({ behavior: "smooth" });
     }
-    setMobileMenuOpen(false); // Close mobile menu after clicking
+    setMobileMenuOpen(false); 
   };
 
   return (
     <header className="home-header">
       <div className="header-container">
-        {/* Logo */}
         <div className="logo-container" onClick={() => navigate("/")}>
           <span className="logo-text">YARCoin</span>
           <span className="logo-badge">Learn & Earn</span>
         </div>
 
-        {/* Desktop Navigation */}
         <nav className="desktop-nav">
           <ul className="nav-links">
             <li>
@@ -107,7 +105,6 @@ export default function HomeHeader() {
           </ul>
         </nav>
 
-        {/* Desktop Auth Button / Profile */}
         <div className="desktop-auth">
           {!isLoggedIn ? (
             <button className="auth-btn" onClick={handleAuthClick}>
@@ -168,12 +165,10 @@ export default function HomeHeader() {
           )}
         </div>
 
-        {/* Mobile Menu Button */}
         <button className="mobile-menu-btn" onClick={toggleMobileMenu}>
           {mobileMenuOpen ? <FaTimes /> : <FaBars />}
         </button>
 
-        {/* Mobile Menu */}
         {mobileMenuOpen && (
           <div className="mobile-menu">
             <ul className="mobile-nav-links">

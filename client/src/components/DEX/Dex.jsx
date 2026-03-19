@@ -11,6 +11,19 @@ export default function Dex() {
   const [showHistory, setShowHistory] = useState(false);
   const [transactions, setTransactions] = useState([]);
   const walletAddress = localStorage.getItem("walletAddress");
+  const [dotCount, setDotCount] = useState(0);
+
+
+  useEffect(() => {
+      if (loading) {
+        const interval = setInterval(() => {
+          setDotCount(prev => (prev + 1) % 4); // 0,1,2,3
+        }, 500); // 500ms per dot
+        return () => clearInterval(interval);
+      } else {
+        setDotCount(0); // reset when not loading
+      }
+    }, [loading]);
 
 
   useEffect(() => {
@@ -79,7 +92,6 @@ export default function Dex() {
     const decimals = await yarToken.decimals();
     const amount = ethers.parseUnits(yarcAmount.toString(), decimals);
 
-    // CHECK BALANCE FIRST (FIXED)
     const balance = await yarToken.balanceOf(userAddress);
     if (balance < amount) {
       alert("Not enough YAR balance");
@@ -87,7 +99,6 @@ export default function Dex() {
       return;
     }
 
-    // CHECK ALLOWANCE
     const currentAllowance = await yarToken.allowance(userAddress, DEX_ADDRESS);
 
     if (currentAllowance < amount) {
@@ -95,7 +106,6 @@ export default function Dex() {
       await approveTx.wait();
     }
 
-    // CONVERT
     const convertTx = await dex.convertYARtoUSD(amount);
     const receipt = await convertTx.wait();
 
@@ -107,7 +117,6 @@ export default function Dex() {
 
     // console.log("Converted!", convertTx.hash);
 
-    //BACKEND CALL
     const baseUrl = import.meta.env.VITE_BASE_URL;
 
     const response = await fetch(`${baseUrl}/dex/convert`, {
@@ -141,7 +150,6 @@ export default function Dex() {
 };
 
 
-  // 🔥 Format Date
   const formatDate = (dateString) => {
     const date = new Date(dateString);
     return date.toLocaleString();
@@ -178,7 +186,7 @@ export default function Dex() {
           </div>
 
           <button type="submit" className="convert-btn" disabled={loading}>
-            {loading ? "Converting..." : "Convert to USD"}
+            {loading ? `Converting${".".repeat(dotCount)}` : "Convert to USD"}
           </button>
 
           <button
@@ -217,7 +225,6 @@ export default function Dex() {
           </div>
         </div>
       )}
-
     </div>
   );
 }

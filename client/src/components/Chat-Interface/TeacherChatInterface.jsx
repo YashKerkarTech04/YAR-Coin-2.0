@@ -15,7 +15,6 @@ function TeacherChatInterface() {
 
   const baseUrl = import.meta.env.VITE_BASE_URL;
 
-  // Load logged-in teacher from localStorage
   useEffect(() => {
     const userId = localStorage.getItem("userId");
     const userRole = localStorage.getItem("userRole");
@@ -26,7 +25,7 @@ function TeacherChatInterface() {
       navigate("/auth");
       return;
     }
-
+    
     setUser({
       _id: userId,
       role: userRole,
@@ -34,7 +33,6 @@ function TeacherChatInterface() {
     });
   }, [navigate]);
 
-  // Fetch students owned by this teacher
   useEffect(() => {
     if (!user) return;
 
@@ -45,11 +43,9 @@ function TeacherChatInterface() {
         if (!res.ok) throw new Error("Failed to fetch students");
         const allStudents = await res.json();
 
-        // Filter students where ownedBy matches the teacher's ID
         const myStudents = allStudents.filter((s) => s.ownedBy === user._id);
         setStudents(myStudents);
 
-        // Initialize all as collapsed
         const initialExpanded = {};
         myStudents.forEach((_, index) => {
           initialExpanded[index] = false;
@@ -66,7 +62,6 @@ function TeacherChatInterface() {
     fetchStudents();
   }, [user, baseUrl]);
 
-  // Socket connection and message handling
   useEffect(() => {
     if (!user) return;
 

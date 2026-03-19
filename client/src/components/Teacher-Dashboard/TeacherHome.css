@@ -1,4 +1,3 @@
-/* ── Loading Coin ────────────────────────────────────────── */
 .pl {
   display: flex;
   flex-direction: column;
@@ -137,7 +136,6 @@
   25%, 75% { opacity: 0.7; transform: translateX(-50%) scale(1.2); background: radial-gradient(ellipse at center, rgba(0,0,0,0.5) 0%, rgba(0,0,0,0.3) 60%, transparent 90%); }
 }
 
-/* ── Penalty & NFT Action Buttons (My Team view) ────────── */
 .col-penalty,
 .col-nft {
   white-space: nowrap;
@@ -154,7 +152,6 @@
   white-space: nowrap;
 }
 
-/* Penalty button -- red/warning style */
 .action-btn.penalty-btn {
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   color:white;
@@ -173,7 +170,6 @@
   transform: scale(0.97);
 }
 
-/* NFT button -- purple/gradient style */
 .nft-btn {
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   color: white;
@@ -189,15 +185,9 @@
 }
 .no-underline {
   text-decoration: none;
-  color: inherit; /* optional: keeps button text color */
+  color: inherit; 
 }
 
-
-
-
-
-
-/* ── Page Shell ──────────────────────────────────────────── */
 .bidding-system {
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   min-height: 100vh;
@@ -213,7 +203,6 @@
   gap: 28px;
 }
 
-/* ── Section Wrapper ─────────────────────────────────────── */
 .students-section {
   background: white;
   border-radius: 14px;
@@ -245,7 +234,6 @@
   font-weight: 600;
 }
 
-/* ── Search + Filter Bar ─────────────────────────────────── */
 .teacher-search-bar {
   display: flex;
   align-items: center;
@@ -334,7 +322,6 @@
   border-color: #667eea;
 }
 
-/* ── Students Table ──────────────────────────────────────── */
 .students-table-wrapper {
   overflow-x: auto;
   border-radius: 10px;
@@ -447,7 +434,6 @@
 .bid-button:hover:not(:disabled) { transform: scale(1.05); box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4); }
 .bid-button.acquired { background: #adb5bd; cursor: not-allowed; }
 
-/* ── Pagination ──────────────────────────────────────────── */
 .pagination {
   display: flex;
   align-items: center;
@@ -488,7 +474,6 @@
 
 .pagination-info { text-align: center; color: #888; font-size: 0.82rem; margin-top: 10px; margin-bottom: 0; }
 
-/* ── Teachers List (Admins view) ─────────────────────────── */
 .teachers-list-table {
   display: flex;
   flex-direction: column;
@@ -585,7 +570,6 @@
 
 .no-acquisitions { padding: 12px 0; text-align: center; color: #aaa; font-style: italic; font-size: 0.88rem; }
 
-/* ── Modal ───────────────────────────────────────────────── */
 .modal-overlay {
   position: fixed;
   inset: 0;
@@ -650,7 +634,6 @@
 .confirm-bid-btn:hover:not(:disabled) { transform: scale(1.04); box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4); }
 .confirm-bid-btn:disabled { background: #adb5bd; cursor: not-allowed; }
 
-/* ── Responsive ──────────────────────────────────────────── */
 @media (max-width: 900px) {
   .teacher-row-main { grid-template-columns: 1fr 1fr; gap: 10px; }
   .acquired-row { grid-template-columns: 1fr 1fr; }

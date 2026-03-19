@@ -26,32 +26,28 @@ import HomeNavbar from "../Navbar/HomeNavbar";
 
 export default function HomePage() {
   const [loggedInUser, setLoggedInUser] = useState("");
-  const [userRole, setUserRole] = useState(""); // Added state for user role
+  const [userRole, setUserRole] = useState(""); 
   const navigate = useNavigate();
   const location = useLocation();
 
   useEffect(() => {
-    // Get user info from localStorage if logged in
     const userName = localStorage.getItem("userName") || localStorage.getItem("username") || "";
-    const role = localStorage.getItem("userRole") || ""; // Get user role
+    const role = localStorage.getItem("userRole") || ""; 
     setLoggedInUser(userName);
-    setUserRole(role); // Set user role in state
+    setUserRole(role); 
   }, [location]);
 
   const handleEnterPlayground = () => {
-    // Check if user is logged in before allowing entry to playground
     const isLoggedIn = localStorage.getItem("userEmail") || localStorage.getItem("username");
-    const role = localStorage.getItem("userRole"); // Get the user's role from localStorage
+    const role = localStorage.getItem("userRole"); 
     
     if (isLoggedIn) {
       if (role === "teacher") {
         navigate("/teacher-home");
       } else {
-        // Default to student playground (assuming student role)
         navigate("/student/playground");
       }
     } else {
-      // Redirect to auth page if not logged in
       navigate("/auth", { state: { from: "home", message: "Please login to access the Playground" } });
     }
   };
@@ -76,10 +72,9 @@ export default function HomePage() {
 
   return (
     <div className="home-page">
-      <HomeNavbar /> {/* Use the imported component here */}
+      <HomeNavbar /> 
       
       <main className="home-main">
-        {/* Hero Section */}
         <section className="hero-section" id="hero">
           <div className="hero-container">
             <div className="hero-content">
@@ -154,7 +149,6 @@ export default function HomePage() {
 
             <div className="hero-visual">
               <div className="visual-container">
-                {/* Bidding Auction Center */}
                 <div className="auction-center">
                   <div className="auction-podium">
                     <div className="podium-platform">
@@ -164,7 +158,6 @@ export default function HomePage() {
                     <div className="bidding-active">LIVE BIDDING</div>
                   </div>
 
-                  {/* Rising Bid Numbers */}
                   <div className="bid-bubble bid-1">
                     <span className="bid-amount">+50</span>
                     <span className="bid-currency">
@@ -194,13 +187,11 @@ export default function HomePage() {
                     </span>
                   </div>
 
-                  {/* Bid Waves */}
                   <div className="bid-wave wave-1"></div>
                   <div className="bid-wave wave-2"></div>
                   <div className="bid-wave wave-3"></div>
                 </div>
 
-                {/* Teacher Bidding Cards */}
                 <div className="floating-card card-1">
                   <div className="card-badge">BIDDING</div>
                   <div className="card-header">
@@ -255,7 +246,6 @@ export default function HomePage() {
                   </div>
                 </div>
 
-                {/* Auction Elements */}
                 <FaHammer className="auction-hammer" />
                 <FaMoneyBillWave className="price-tag" />
               </div>
@@ -263,7 +253,6 @@ export default function HomePage() {
           </div>
         </section>
 
-        {/* YAR Coin Market Section */}
         <section className="market-section" id="market">
           <div className="market-container">
             <div className="market-header">
@@ -308,7 +297,7 @@ export default function HomePage() {
                     viewBox="0 0 600 300"
                     preserveAspectRatio="none"
                   >
-                    {/* Background grid */}
+                    
                     <g className="chart-grid">
                       <line x1="80" y1="50" x2="580" y2="50" />
                       <line x1="80" y1="120" x2="580" y2="120" />
@@ -360,7 +349,6 @@ export default function HomePage() {
           </div>
         </section>
 
-        {/* Features Section */}
         <section className="features-section" id="features">
           <div className="features-container">
             <h2 className="section-title">Why Join Our Platform?</h2>
@@ -424,7 +412,6 @@ export default function HomePage() {
           </div>
         </section>
 
-        {/* How It Works Section */}
         <section className="how-it-works-section" id="how-it-works">
           <div className="how-it-works-container">
             <h2 className="section-title">How It Works</h2>
@@ -458,7 +445,6 @@ export default function HomePage() {
           </div>
         </section>
 
-        {/* CTA Section */}
         <section className="cta-section">
           <div className="cta-container">
             <h2>Ready to Start Your Journey?</h2>
@@ -471,7 +457,6 @@ export default function HomePage() {
         </section>
       </main>
 
-      {/* Footer */}
       <footer className="home-footer">
         <div className="footer-container">
           <div className="footer-grid">

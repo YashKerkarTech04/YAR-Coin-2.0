@@ -87,7 +87,7 @@
   right: 0;
   top: 65px;
   width: 300px;
-  background: #1f2937; /* Dark slate */
+  background: #1f2937; 
   border-radius: 18px;
   padding: 1.4rem;
   color: #f3f4f6;
@@ -133,9 +133,6 @@
   font-weight: 600;
 }
 
-
-
-/* Yellow Button */
 button.dashboard-btn {
   background: linear-gradient(135deg, #fbbf24, #f59e0b);
   width:100%;
@@ -148,8 +145,6 @@ button.dashboard-btn {
   transition: all 0.25s ease;
 }
 
-
-/* Hover effect */
 button.dashboard-btn:hover {
   transform: translateY(-2px);
   box-shadow: 0 8px 15px rgba(251,191,36,0.3);
@@ -170,8 +165,6 @@ button.grantAchievement-btn:hover{
   color: inherit;
   display: block;
 }
-
-
 
 .dashboard-btn a {
   text-decoration: none;

@@ -1,4 +1,3 @@
-/* Container & Background */
 .nft-history-wrapper {
   min-height: 100vh;
   background: radial-gradient(circle at top left, #667eea 0%, #764ba2 40%, #44337a 100%);
@@ -18,7 +17,6 @@
   box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
 }
 
-/* Titles */
 .history-title {
   text-align: center;
   margin-bottom: 25px;
@@ -41,7 +39,6 @@
   color: #764ba2;
 }
 
-/* NFT List */
 .history-list {
   display: flex;
   flex-direction: column;
@@ -62,7 +59,6 @@
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
 }
 
-/* Rows */
 .history-row {
   margin-bottom: 8px;
   font-size: 16px;
@@ -73,7 +69,6 @@
   color: #764ba2;
 }
 
-/* TxHash row with copy button */
 .tx-hash-row {
   display: flex;
   align-items: center;
@@ -91,7 +86,6 @@
   word-break: break-all;
 }
 
-/* Copy Button */
 .copy-btn {
   background: transparent;
   border: 1px solid #764ba2;
@@ -125,14 +119,12 @@
   transform: scale(0.95);
 }
 
-/* Date */
 .history-date {
   font-size: 13px;
   color: #888;
   margin-top: 10px;
 }
 
-/* No History Message */
 .no-history {
   text-align: center;
   padding: 25px;
@@ -141,7 +133,6 @@
   font-weight: 500;
 }
 
-/* Loading & Error */
 .nft-history-loading,
 .nft-history-error {
   min-height: 100vh;
@@ -153,7 +144,6 @@
   color: white;
 }
 
-/* Responsive */
 @media (max-width: 600px) {
   .nft-history-container {
     padding: 20px;
