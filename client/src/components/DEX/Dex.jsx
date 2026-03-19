@@ -79,10 +79,11 @@ export default function Dex() {
     const decimals = await yarToken.decimals();
     const amount = ethers.parseUnits(yarcAmount.toString(), decimals);
 
-    // ✅ 1️⃣ CHECK BALANCE FIRST (FIXED)
+    // CHECK BALANCE FIRST (FIXED)
     const balance = await yarToken.balanceOf(userAddress);
     if (balance < amount) {
       alert("Not enough YAR balance");
+      setLoading(false);
       return;
     }
 
@@ -100,6 +101,7 @@ export default function Dex() {
 
     if (receipt.status !== 1) {
       alert("Transaction failed on blockchain");
+      setLoading(false);
       return;
     }
 

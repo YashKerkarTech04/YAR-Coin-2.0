@@ -146,6 +146,12 @@ export default function Navbar({
                 </Link>
               </button>
 
+              <button className="penalty-history-btn">
+                <Link to="/nfthistory">
+                  View NFT History
+                </Link>
+              </button>
+
               <button 
                 className="dropdown-logout-btn" 
                 onClick={handleLogout}

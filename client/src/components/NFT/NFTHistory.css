@@ -1,5 +1,5 @@
 /* Container & Background */
-.penalty-history-wrapper {
+.nft-history-wrapper {
   min-height: 100vh;
   background: radial-gradient(circle at top left, #667eea 0%, #764ba2 40%, #44337a 100%);
   display: flex;
@@ -9,7 +9,7 @@
   font-family: 'Inter', sans-serif;
 }
 
-.penalty-history-container {
+.nft-history-container {
   background: #ffffff;
   width: 100%;
   max-width: 900px;
@@ -27,7 +27,7 @@
   font-weight: 700;
 }
 
-.total-penalty-card {
+.total-nft-card {
   background: #f4f6f9;
   padding: 18px;
   border-radius: 10px;
@@ -37,11 +37,11 @@
   font-size: 18px;
 }
 
-.total-penalty-card span {
-  color: #d9534f;
+.total-nft-card span {
+  color: #764ba2;
 }
 
-/* History List */
+/* NFT List */
 .history-list {
   display: flex;
   flex-direction: column;
@@ -73,6 +73,58 @@
   color: #764ba2;
 }
 
+/* TxHash row with copy button */
+.tx-hash-row {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  word-break: break-all;
+  font-family: 'Courier New', monospace;
+  font-size: 14px;
+  color: #555;
+}
+
+.tx-hash-text {
+  flex: 1;
+  min-width: 200px;
+  word-break: break-all;
+}
+
+/* Copy Button */
+.copy-btn {
+  background: transparent;
+  border: 1px solid #764ba2;
+  color: #764ba2;
+  width: 58px;
+  height: 30px;
+  border-radius: 6px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  transition: all 0.3s ease;
+  padding: 0;
+  flex-shrink: 0;
+}
+
+.copy-btn:hover {
+  background: #764ba2;
+  color: white;
+  transform: scale(1.05);
+}
+
+.copy-btn.copied {
+  background: white;
+  border: 1px solid #764ba2;;
+  color: #764ba2;
+}
+
+.copy-btn:active {
+  transform: scale(0.95);
+}
+
 /* Date */
 .history-date {
   font-size: 13px;
@@ -90,8 +142,8 @@
 }
 
 /* Loading & Error */
-.penalty-history-loading,
-.penalty-history-error {
+.nft-history-loading,
+.nft-history-error {
   min-height: 100vh;
   display: flex;
   justify-content: center;
@@ -103,7 +155,7 @@
 
 /* Responsive */
 @media (max-width: 600px) {
-  .penalty-history-container {
+  .nft-history-container {
     padding: 20px;
   }
   .history-card {
@@ -112,7 +164,16 @@
   .history-title {
     font-size: 24px;
   }
-  .total-penalty-card {
+  .total-nft-card {
     font-size: 16px;
+  }
+  
+  .tx-hash-row {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .copy-btn {
+    align-self: flex-end;
   }
 }

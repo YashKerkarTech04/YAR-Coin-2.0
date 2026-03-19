@@ -22,7 +22,7 @@ const TeacherHome = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [teacherPage, setTeacherPage] = useState(1);
   const [searchQuery, setSearchQuery] = useState('');
-  const [activeFilter, setActiveFilter] = useState('all');
+  const [activeFilter, setActiveFilter] = useState('myteam');
 
   useEffect(() => {
     const timer = setTimeout(() => {

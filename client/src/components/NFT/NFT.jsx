@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import "./NFT.css";
 
@@ -9,6 +9,18 @@ const NFT = () => {
   const [description, setDescription] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [message, setMessage] = useState({ text: "", type: "" });
+  const [dotCount, setDotCount] = useState(0);
+
+  useEffect(() => {
+    if (isLoading) {
+      const interval = setInterval(() => {
+        setDotCount(prev => (prev + 1) % 4); // 0,1,2,3
+      }, 500); // 500ms per dot
+      return () => clearInterval(interval);
+    } else {
+      setDotCount(0); // reset when not loading
+    }
+  }, [isLoading]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -56,14 +68,14 @@ const NFT = () => {
         throw new Error(data.message || data.error);
       }
 
-      const txUrl = `https://sepolia.etherscan.io/tx/${data.txHash}`;
+      // const txUrl = `https://sepolia.etherscan.io/tx/${data.txHash}`;
 
       setMessage({
         text: `NFT minted! Token ID: ${data.tokenId}`,
         type: "success",
       });
 
-      console.log("Tx:", txUrl);
+      // console.log("Tx:", txUrl);
 
       setTitle("");
       setDescription("");
@@ -118,7 +130,7 @@ const NFT = () => {
             />
 
             <button type="submit" className="mint-btn" disabled={isLoading}>
-              {isLoading ? "Minting..." : "Mint NFT"}
+              {isLoading ? `Minting${".".repeat(dotCount)}` : "Mint NFT"}
             </button>
           </form>
         </div>

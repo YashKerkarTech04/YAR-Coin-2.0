@@ -22,6 +22,7 @@ function TeacherChatInterface() {
     const userName = localStorage.getItem("userName");
 
     if (!userId || !userRole || userRole !== "teacher") {
+      localStorage.clear();
       navigate("/auth");
       return;
     }
@@ -95,9 +96,6 @@ function TeacherChatInterface() {
       };
       setMessages((prev) => [...prev, newMessage]);
     });
-
-    socket.on("connect", () => console.log("Teacher socket connected"));
-    socket.on("disconnect", (reason) => console.log("Teacher socket disconnected:", reason));
 
     return () => {
       socket.off("previousMessages");

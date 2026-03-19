@@ -1,7 +1,7 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Auth from "./components/Authentication/Auth";
 import TeacherHome from "./components/Teacher-Dashboard/TeacherHome";
-import HomePage from "./components/Student-Dashboard/HomePage";
+import HomePage from "./components/Home-Page/HomePage";
 import Playground from "./components/Student-Dashboard/Playground";
 import StudentChatInterface from "./components/Chat-Interface/StudentChatInterface";
 import TeacherChatInterface from "./components/Chat-Interface/TeacherChatInterface";
@@ -9,6 +9,7 @@ import Dex from "./components/DEX/Dex";
 import Penalty from "./components/Penalty/PenaltyPage";
 import PenaltyHistory from "./components/Penalty/PenaltyHistory";
 import NFT from "./components/NFT/NFT";
+import NFTHistory from "./components/NFT/NFTHistory";
 
 function App() {
   return (
@@ -26,6 +27,7 @@ function App() {
         <Route path="/penalty" element={<Penalty/>}/>
         <Route path="/penaltyhistory" element={<PenaltyHistory/>}/>
         <Route path="/nft" element={<NFT/>}/>
+        <Route path="/nfthistory" element={<NFTHistory/>}/>
       </Routes>
     </Router>
   );

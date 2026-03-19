@@ -99,18 +99,6 @@ export default function TeacherNavbar({
                 </Link>
               </button>
 
-              {/* <button className="penalty-btn">
-                <Link to="/penalty">
-                  Penalty
-                </Link>
-              </button>
-
-              <button className="grantAchievement-btn">
-                <Link to="/nft">
-                  Grant Achievement
-                </Link>
-              </button> */}
-
               <button 
                 className="dropdown-logout-btn" 
                 onClick={handleLogout}

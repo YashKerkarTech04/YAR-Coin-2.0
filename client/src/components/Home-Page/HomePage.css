@@ -934,7 +934,7 @@
   border-radius: 6px;
 }
 
-.copy-btn {
+.copy-btn-homepage{
   background: linear-gradient(135deg, #6a7cff, #9a6bff);
   border: none;
   padding: 6px 14px;
@@ -945,7 +945,7 @@
   transition: 0.2s;
 }
 
-.copy-btn:hover {
+.copy-btn-homepage:hover {
   transform: scale(1.05);
 }
 

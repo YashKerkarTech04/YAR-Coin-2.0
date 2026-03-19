@@ -11,5 +11,4 @@ const socket = io(`${baseUrl}`, {
   reconnectionDelay: 1000
 });
 
-// Make sure we're exporting default
 export default socket;

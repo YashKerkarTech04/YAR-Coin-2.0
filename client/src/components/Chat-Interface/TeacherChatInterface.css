@@ -451,8 +451,9 @@
 /* Responsive adjustments */
 @media (max-width: 768px) {
   .teacher-sidebar {
-    width: 280px;
+    width: 350px;
   }
+
   
   .message {
     max-width: 70%;

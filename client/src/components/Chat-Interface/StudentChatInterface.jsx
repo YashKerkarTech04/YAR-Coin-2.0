@@ -21,6 +21,7 @@ function StudentChatInterface() {
     const userName = localStorage.getItem("userName");
 
     if (!userId || !userRole) {
+      localStorage.clear();
       navigate("/auth");
       return;
     }
@@ -91,7 +92,6 @@ function StudentChatInterface() {
     if (!user || user.role !== "student") return;
 
     const socketRole = "student";
-
     socket.emit("joinRoom", {
       userId: user._id,
       role: socketRole,
@@ -119,8 +119,6 @@ function StudentChatInterface() {
       setMessages((prev) => [...prev, newMsg]);
     });
 
-    socket.on("connect", () => console.log("Student socket connected"));
-    socket.on("disconnect", (reason) => console.log("Student socket disconnected:", reason));
 
     return () => {
       socket.off("previousMessages");
@@ -163,7 +161,7 @@ function StudentChatInterface() {
         </div>
 
         {teamMembers.map((member) => (
-          <div key={member._id} className="member">
+          <div key={member._id || member.name} className="member">
             {member.name} ({member.role})
           </div>
         ))}

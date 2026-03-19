@@ -11,6 +11,7 @@ const Penalty = () => {
   const [reason, setReason] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [message, setMessage] = useState({ text: "", type: "" });
+  const [dotCount, setDotCount] = useState(0);
 
   const navigate = useNavigate();
 
@@ -22,6 +23,17 @@ const Penalty = () => {
       navigate("/");
     }
   }, [navigate]);
+
+  useEffect(() => {
+  if (isLoading) {
+    const interval = setInterval(() => {
+      setDotCount(prev => (prev + 1) % 4); // 0,1,2,3
+    }, 500); // 500ms per dot
+    return () => clearInterval(interval);
+  } else {
+    setDotCount(0); // reset when not loading
+  }
+}, [isLoading]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -78,11 +90,9 @@ const Penalty = () => {
       });
 
       // Reset form
-      // setCandidateWallet("");
       setAmount("");
       setReason("");
 
-      console.log("Backend Response:", data);
 
     } catch (error) {
       console.error("Backend Error:", error);
@@ -136,7 +146,7 @@ const Penalty = () => {
             />
 
             <button type="submit" className="apply-btn" disabled={isLoading}>
-              {isLoading ? "Processing..." : "Apply Penalty"}
+              {isLoading ? `Processing${".".repeat(dotCount)}` : "Apply Penalty"}
             </button>
           </form>
         </div>

@@ -6,14 +6,13 @@ import { connectWallet } from "../../utils/connectWallet.js";
 
 export default function Auth() {
 
+  const baseUrl = import.meta.env.VITE_BASE_URL;
   const [tab, setTab] = useState("register");
   const [role, setRole] = useState("student");
   const [isLoading, setIsLoading] = useState(false); //Disables form buttons during API calls (Register & Login button will get disabled)
   const [message, setMessage] = useState({ text: "", type: "" }); //to show success or error message
   const [walletAddress, setWalletAddress] = useState("");
   const navigate = useNavigate();
-
-  // Student registration form state For storing the data of 3 forms
 
   // (a) Student Register
   const [studentFormData, setStudentFormData] = useState({
@@ -58,8 +57,6 @@ export default function Auth() {
     const address = await connectWallet();
     if (address) {
       setWalletAddress(address);
-      console.log("Wallet Address:", address);
-
       showMessage("Wallet connected: " + address, "success");
     }
   };
@@ -91,7 +88,7 @@ export default function Auth() {
       }
 
       // Backend Registration
-      const baseUrl = import.meta.env.VITE_BASE_URL;
+
       const url = role === "student"
         ? `${baseUrl}/api/students`
         : `${baseUrl}/api/teachers`;
@@ -162,8 +159,6 @@ export default function Auth() {
     setIsLoading(true);
 
     try {
-      const baseUrl = import.meta.env.VITE_BASE_URL;
-
       const res = await fetch(`${baseUrl}/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -174,8 +169,6 @@ export default function Auth() {
       });
 
       const data = await res.json();
-      console.log("Data:", data);
-
       if (!res.ok) {
         showMessage("Error: " + (data.error || "Login failed"), "error");
         return;
@@ -183,9 +176,6 @@ export default function Auth() {
 
       const user = data.user;
       const userRole = data.role;
-
-      console.log("User:", user);
-      console.log("User role:", userRole);
 
       // STORE USER DATA IN LOCALSTORAGE
       localStorage.setItem("userEmail", user.email);
@@ -199,7 +189,6 @@ export default function Auth() {
 
       showMessage("Login successful! Redirecting...", "success");
 
-      // Navigate based on role with user data
       setTimeout(() => {
         if (userRole === 'teacher') {
           navigate("/teacher-home", {
@@ -237,8 +226,7 @@ export default function Auth() {
         walletAddress: address
       });
 
-      console.log("Login Wallet Address:", address);
-      showMessage("Wallet connected: " + address, "success");
+      showMessage("Wallet connected successfully", "success");
     }
   };
 

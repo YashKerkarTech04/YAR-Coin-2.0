@@ -99,7 +99,7 @@ export default function HomePage() {
                     0x42861CE1c5A357EdE7bd0CAe9A14B1AC95E56061
                   </span>
 
-                  <button id="copyBtn" className="copy-btn" onClick={copyContractAddress}>Copy</button>
+                  <button id="copyBtn" className="copy-btn-homepage" onClick={copyContractAddress}>Copy</button>
                 </div>
               </div>
 
