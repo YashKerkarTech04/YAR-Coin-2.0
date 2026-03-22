@@ -218,11 +218,33 @@ const Playground = () => {
     return (
       <>
         <Navbar onLogout={handleLogout} />
-        <div className="loading-container">
+        {/* <div className="loading-container">
           <div className="loading-spinner">
             <h3>Loading Playground...</h3>
             <p>Fetching members data...</p>
           </div>
+        </div> */}
+
+        <div className="pl">
+          <div className="pl__coin">
+            <div className="pl__coin-flare"></div>
+            <div className="pl__coin-flare"></div>
+            <div className="pl__coin-flare"></div>
+            <div className="pl__coin-flare"></div>
+            <div className="pl__coin-layers">
+              <div className="pl__coin-layer">
+                <div className="pl__coin-inscription"></div>
+              </div>
+              <div className="pl__coin-layer"></div>
+              <div className="pl__coin-layer"></div>
+              <div className="pl__coin-layer"></div>
+              <div className="pl__coin-layer">
+                <div className="pl__coin-inscription"></div>
+              </div>
+            </div>
+          </div>
+          <div className="pl__shadow"></div>
+          
         </div>
       </>
     );
@@ -280,9 +302,9 @@ const Playground = () => {
             value={filterStatus}
             onChange={e => setFilterStatus(e.target.value)}
           >
-            <option value="all">All Students</option>
-            <option value="acquired">Acquired Students</option>
-            <option value="unacquired">Unacquired Students</option>
+            <option value="all">All Candidates</option>
+            <option value="acquired">Acquired Candidates</option>
+            <option value="unacquired">Unacquired Candidates</option>
           </select>
         </div>
 
