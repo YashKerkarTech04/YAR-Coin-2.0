@@ -1,9 +1,10 @@
+const { SEPOLIA_RPC_URL, ADMIN_PRIVATE_KEY, YAR_CONTRACT_ADDRESS, ADMIN_REWARD_RATE } = require('../utils/env');
 const Teacher = require('../models/Teacher');
 const express = require('express');
 const Router = express.Router();
 const { ethers } = require('ethers');
-const dotenv = require('dotenv');
-dotenv.config();
+// const dotenv = require('dotenv');
+// dotenv.config();
 
 Router.get('/', async (req, res) => {
     try {
@@ -21,13 +22,13 @@ Router.post('/', async (req, res) => {
         if (!walletAddress) {
             return res.status(400).json({ error: "Connect to Metamask wallet!" });
         }
-        const provider = new ethers.JsonRpcProvider(process.env.SEPOLIA_RPC_URL);
-        const wallet = new ethers.Wallet(process.env.ADMIN_PRIVATE_KEY, provider);
-        const contractAddress = process.env.YAR_CONTRACT_ADDRESS;
+        const provider = new ethers.JsonRpcProvider(SEPOLIA_RPC_URL);
+        const wallet = new ethers.Wallet(ADMIN_PRIVATE_KEY, provider);
+        const contractAddress = YAR_CONTRACT_ADDRESS;
         const abi = ["function transfer(address to, uint256 value) public returns (bool)",
             "function balanceOf(address owner) view returns (uint256)"];
         const contract = new ethers.Contract(contractAddress, abi, wallet);
-        const amount = ethers.parseUnits("100", 18);
+        const amount = ethers.parseUnits(ADMIN_REWARD_RATE.toString(), 18);
         const tx = await contract.transfer(walletAddress, amount);
         await tx.wait();
         const balance = await contract.balanceOf(walletAddress);
