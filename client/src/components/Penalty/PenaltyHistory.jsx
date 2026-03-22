@@ -67,7 +67,7 @@ const PenaltyHistory = () => {
         </div>
 
         {history.length === 0 ? (
-          <div className="no-history">No penalties found 🎉</div>
+          <div className="no-history">No Penalties yet. Lucky you!</div>
         ) : (
           <div className="history-list">
             {history.map((item) => (

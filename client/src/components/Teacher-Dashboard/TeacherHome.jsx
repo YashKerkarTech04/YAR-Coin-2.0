@@ -22,13 +22,28 @@ const TeacherHome = () => {
   const [teacherPage, setTeacherPage] = useState(1);
   const [searchQuery, setSearchQuery] = useState('');
   const [activeFilter, setActiveFilter] = useState('myteam');
+  const [dotCount, setDotCount] = useState(0);
 
   useEffect(() => {
     const timer = setTimeout(() => {
       fetchInitialData();
-    }, 3000);
+    }, 2000);
     return () => clearTimeout(timer);
-  });
+  },[]);
+
+  useEffect(() => {
+  let interval;
+  if (loading) {
+    interval = setInterval(() => {
+      setDotCount(prev => (prev + 1) % 4);
+    }, 500);
+  } else {
+    setDotCount(0);
+  }
+  return () => {
+    if (interval) clearInterval(interval);
+  };
+}, [loading]);
 
   const fetchInitialData = async () => {
     try {
@@ -280,7 +295,7 @@ const TeacherHome = () => {
             </div>
           </div>
           <div className="pl__shadow"></div>
-          
+          <div className="loading-text">Loading{'.'.repeat(dotCount)}</div>
         </div>
       </>
     );

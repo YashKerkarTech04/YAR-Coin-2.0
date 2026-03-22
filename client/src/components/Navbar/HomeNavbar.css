@@ -134,7 +134,6 @@
 }
 
 .profile-btn:hover {
-  border-color: #667eea;
   box-shadow: 0 5px 15px rgba(102, 126, 234, 0.2);
 }
 
@@ -142,11 +141,11 @@
   width: 35px;
   height: 35px;
   border-radius: 50%;
-  background: #4C1D95;
+  background: white;
   display: flex;
   align-items: center;
   justify-content: center;
-  color:#DDD6FE;
+  color:rgb(46, 46, 46);
 }
 
 .profile-name {

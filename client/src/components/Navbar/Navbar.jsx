@@ -48,8 +48,10 @@ export default function Navbar({
     return (
       <nav className="navbar">
         <div className="navbar-brand">
+          <div className="navbar-logo-container">
           <span className="navbar-logo-text">YARCoin</span>
           <span className="navbar-logo-badge">Learn & Earn</span>
+        </div>
         </div>
       </nav>
     );
