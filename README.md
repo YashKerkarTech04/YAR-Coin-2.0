@@ -43,8 +43,8 @@ flowchart TD
     A -->|WebSocket| C[Socket Server]
     
     B --> D[(MongoDB Database)]
-    B --> E[Hardhat Blockchain Layer]
-    B --> F[Python Smart Contract Deployment]
+    B --> E[Sepolia Blockchain Layer]
+    B --> F[Smart Contract Deployment]
     
     B --> G[Auction Settlement Engine]
     
@@ -151,9 +151,9 @@ Achievements & milestones are minted as NFTs.
 ```mermaid
 flowchart LR
     A[Admin Mint NFT] --> B[Backend]
-    B --> C[Hardhat Layer]
+    B --> C[Sepolia Layer]
     C --> D[Smart Contract]
-    D --> E[(Local Network)]
+    D --> E[(Metamask)]
     D --> F[(Transaction Hash Stored)]
 ```
 
@@ -173,7 +173,7 @@ flowchart TD
     F --> G[Bid Collection]
     G --> H[(Bids Store)]
     
-    E --> I[Network Broadcast]
+    E --> I[Metamask]
     I --> J[Live Dashboard Update]
 ```
 
@@ -249,8 +249,9 @@ erDiagram
 | Frontend        | React js          |
 | Backend         | Express js        |
 | Database        | MongoDB           |
-| Blockchain      | Hardhat           |
+| Blockchain      | Sepolia           |
 | Smart Contracts | Solidity (Web3)   |
+| DApp            | Metamask          |
 | Deployment      | Python Scripts    |
 | Real-time       | Socket.io         |
 | Scheduler       | node-cron         |
