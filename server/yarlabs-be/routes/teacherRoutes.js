@@ -28,7 +28,7 @@ Router.post('/', async (req, res) => {
         const abi = ["function transfer(address to, uint256 value) public returns (bool)",
             "function balanceOf(address owner) view returns (uint256)"];
         const contract = new ethers.Contract(contractAddress, abi, wallet);
-        const amount = ethers.parseUnits(ADMIN_REWARD_RATE.toString(), 18);
+        const amount = ethers.parseUnits(String(ADMIN_REWARD_RATE), 18);
         const tx = await contract.transfer(walletAddress, amount);
         await tx.wait();
         const balance = await contract.balanceOf(walletAddress);
