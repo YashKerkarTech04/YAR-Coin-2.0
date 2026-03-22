@@ -307,20 +307,20 @@ useEffect(() => {
   );
 
   const filterOptions = [
-    { value: 'all', label: 'All Students' },
+    { value: 'all', label: 'All Candidates' },
     { value: 'myteam', label: 'My Team' },
-    { value: 'admins', label: 'Admins' },
+    { value: 'admins', label: 'Mentors' },
   ];
 
   const getSectionTitle = () => {
-    if (activeFilter === 'all') return 'Available Members for Bidding';
+    if (activeFilter === 'all') return 'Available Candidates for Bidding';
     if (activeFilter === 'myteam') return 'My Team';
-    return 'Admins & Current Holdings';
+    return 'Mentors & Current Holdings';
   };
 
   const getSectionBadge = () => {
-    if (activeFilter === 'admins') return `${filteredTeachers.length} admins`;
-    return `${filteredStudents.length} members`;
+    if (activeFilter === 'admins') return `${filteredTeachers.length} mentors`;
+    return `${filteredStudents.length} candidates`;
   };
 
   if (loading) {
@@ -421,7 +421,7 @@ useEffect(() => {
                       {paginatedStudents.length === 0 ? (
                         <tr>
                           <td colSpan={activeFilter === 'all' ? 9 : 10} className="no-results">
-                            {searchQuery ? 'No members match your search.' : activeFilter === 'myteam' ? 'You have not acquired any members yet.' : 'No available members.'}
+                            {searchQuery ? 'No candidates match your search.' : activeFilter === 'myteam' ? 'You have not acquired any candidate yet.' : 'No available candidates.'}
                           </td>
                         </tr>
                       ) : (
@@ -585,7 +585,7 @@ useEffect(() => {
               <>
                 <div className="teachers-list-table">
                   {paginatedTeachers.length === 0 ? (
-                    <div className="no-results-admin">No admins match your search.</div>
+                    <div className="no-results-admin">No mentors match your search.</div>
                   ) : (
                     paginatedTeachers.map((teacher) => {
                       const dt = processTeacherForDisplay(teacher);
@@ -615,7 +615,7 @@ useEffect(() => {
                                 className="toggle-btn"
                                 onClick={() => toggleTeacherDropdown(teacher._id)}
                               >
-                                Acquired Members ({acquired.length})
+                                Acquired Candidates ({acquired.length})
                                 <span className={`arrow ${isExpanded ? 'up' : 'down'}`}>&#9660;</span>
                               </button>
                             </div>
@@ -650,7 +650,7 @@ useEffect(() => {
                                 })
                               ) : (
                                 <div className="no-acquisitions">
-                                  No members acquired yet
+                                  No candidates acquired yet
                                 </div>
                               )}
                             </div>
