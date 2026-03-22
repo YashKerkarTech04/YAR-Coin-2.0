@@ -3,9 +3,11 @@ const mongoose = require('mongoose');
 const cors = require('cors');
 // const cron = require('node-cron');
 const http = require('http');
+const helmet = require('helmet');
 const { Server } = require('socket.io');
-const dotenv = require('dotenv');
-dotenv.config();
+// const dotenv = require('dotenv');
+// dotenv.config();
+const { PORT, SEPOLIA_RPC_URL, ADMIN_PRIVATE_KEY, YAR_CONTRACT_ADDRESS, MONGO_URI } = require('./utils/env');
 const studentRoutes = require('./routes/studentRoutes');
 const Student = require('./models/Student');
 const teacherRoutes = require('./routes/teacherRoutes');
@@ -22,12 +24,13 @@ const { ethers } = require('ethers');
 const app = express();
 const server = http.createServer(app);
 
-app.use(cors({
-    origin: "*",
-    methods: ["GET", "POST", "PUT", "DELETE"],
-    credentials: true
-}));
+app.use(helmet());
+app.use(cors({ origin: "*", methods: ["GET", "POST", "PUT", "DELETE"], credentials: true }));
 app.use(express.json());
+
+app.get('/', (req, res) => {
+    res.json({ success: true, message: "Welcome to YAR Labs...!" })
+});
 
 app.use('/api/students', studentRoutes);
 app.use('/api/teachers', teacherRoutes);
@@ -37,7 +40,11 @@ app.use('/apply', paneltyRoutes);
 app.use('/mint', nftRoutes);
 app.use('/dex', DEXRoutes);
 
-mongoose.connect(process.env.MONGO_URI)
+app.use((req, res) => {
+    res.status(404).json({ success: false, message: "Route invalid...!", error: "INVALID_ROUTE" });
+});
+
+mongoose.connect(MONGO_URI)
     .then(() => console.log('MongoDB connected...!'))
     .catch((err) => console.log(err));
 
@@ -138,9 +145,9 @@ app.post('/auction', async (req, res) => {
     // cron.schedule('* * * * *', async () => {
     console.log("Running auction settlements...");
     try {
-        const provider = new ethers.JsonRpcProvider(process.env.SEPOLIA_RPC_URL);
-        const wallet = new ethers.Wallet(process.env.ADMIN_PRIVATE_KEY, provider);
-        const contractAddress = process.env.YAR_CONTRACT_ADDRESS;
+        const provider = new ethers.JsonRpcProvider(SEPOLIA_RPC_URL);
+        const wallet = new ethers.Wallet(ADMIN_PRIVATE_KEY, provider);
+        const contractAddress = YAR_CONTRACT_ADDRESS;
         const abi = ["function transferFrom(address from, address to, uint256 value) public returns (bool)",
             "function allowance(address owner, address spender) view returns (uint256)",
             "function balanceOf(address owner) view returns (uint256)"];
@@ -198,6 +205,6 @@ app.post('/auction', async (req, res) => {
     // });
 });
 
-server.listen(process.env.PORT, () => {
-    console.log(`Server port : ${process.env.PORT}`)
+server.listen(PORT, () => {
+    console.log(`Server port : ${PORT}`)
 });
