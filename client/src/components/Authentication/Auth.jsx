@@ -319,7 +319,7 @@ export default function Auth() {
         <p>
           {tab === "login"
             ? "Sign in to your YARCoin account"
-            : `Register as a ${role}`}
+            : `Register to your YARCoin account`}
         </p>
 
         {message.text && (

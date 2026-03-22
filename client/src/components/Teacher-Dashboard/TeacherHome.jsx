@@ -23,6 +23,7 @@ const TeacherHome = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [activeFilter, setActiveFilter] = useState('myteam');
   const [dotCount, setDotCount] = useState(0);
+  const [bids, setBids] = useState({});
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -44,6 +45,56 @@ const TeacherHome = () => {
     if (interval) clearInterval(interval);
   };
 }, [loading]);
+
+useEffect(() => {
+  const fetchBids = async () => {
+    try {
+      const allStudents = students; // or acquired if you want only those
+
+      const results = await Promise.all(
+        allStudents.map(async (s) => {
+          if (!s.walletAddress) return null;
+
+          const response = await fetch(
+            "https://automatic-space-spoon-7vqpjr79p4qqcp4vx-5000.app.github.dev/api/biddings/bids",
+            {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({
+                walletAddress: s.walletAddress,
+              }),
+            }
+          );
+
+          const data = await response.json();
+
+          return {
+            walletAddress: s.walletAddress,
+            ...data,
+          };
+        })
+      );
+
+      // Convert array → object for easy access
+      const bidsMap = {};
+      results.forEach((item) => {
+        if (item) {
+          bidsMap[item.walletAddress] = item;
+        }
+      });
+
+      setBids(bidsMap);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  if (students.length > 0) {
+    fetchBids();
+  }
+}, [students]);
 
   const fetchInitialData = async () => {
     try {
@@ -570,18 +621,37 @@ const TeacherHome = () => {
                             </div>
                           </div>
 
+                          
                           {isExpanded && (
                             <div className="teacher-acquired-list">
                               {acquired.length > 0 ? (
-                                acquired.map((s) => (
-                                  <div key={s._id} className="acquired-row">
-                                    <span className="acquired-name">{s.name}</span>
-                                    <span className="acquired-email">{s.email}</span>
-                                    <span className="acquired-balance">{s.yarBalance} YARC</span>
-                                  </div>
-                                ))
+                                acquired.map((s) => {
+                                  const bidData = bids[s.walletAddress];
+
+                                  return (
+                                    <div key={s._id} className="acquired-row">
+
+                                      <span className="acquired-name">
+                                        {bidData?.studentName || "Loading..."}
+                                      </span>
+
+                                      <span className="acquired-email">
+                                        {bidData?.studentEmail || "Loading..."}
+                                      </span>
+
+                                      <span className="acquired-balance">
+                                        {bidData
+                                          ? `${bidData.highestBid} YARC`
+                                          : "Loading..."}
+                                      </span>
+
+                                    </div>
+                                  );
+                                })
                               ) : (
-                                <div className="no-acquisitions">No members acquired yet</div>
+                                <div className="no-acquisitions">
+                                  No members acquired yet
+                                </div>
                               )}
                             </div>
                           )}
